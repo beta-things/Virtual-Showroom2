@@ -26,6 +26,7 @@
                                 <div v-for="(part, partIndex) in slot.parts" v-if="!part.doNotDisplay">
                                     <input  @click="callUpdateBuildPart(slotIndex, partIndex, slot.id)" type="radio" :id="part.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" :value="partIndex" />
                                     <label  :for="part.id">{{part.friendlyName}}</label>
+                                    
                                 </div>
                             </div>
                             
