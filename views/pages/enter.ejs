@@ -1,0 +1,29 @@
+<div id="enter" v-cloak>
+  <div class="container-fluid pt-5 pb-5" v-if="!cloudSuccess">
+    
+    <div style="max-width: 450px;" class="mx-auto" >
+      <h1 class="text-center">Enter Your Virtual Showroom Session</h1>
+      <hr/>
+      
+        
+        <div class="form-group">
+          <input oninput="this.value = this.value.toUpperCase()"  class="form-control" id="session-code" type="text"  :class="[formErrors.sessionCode ? 'is-invalid' : '']" v-model.trim="formData.sessionCode" placeholder="Session Code" >
+          <div class="invalid-feedback" v-if="formErrors.sessionCode">Please enter your sessions code</div>
+        </div>
+        
+        <div class="form-group">
+          <input class="form-control" id="contact-email" type="email"  :class="[formErrors.contactEmail ? 'is-invalid' : '']" v-model.trim="formData.contactEmail" placeholder="Email Address" >
+          <div class="invalid-feedback" v-if="formErrors.contactEmail">Please enter a valid email address.</div>
+        </div>
+        
+        <cloud-error v-if="cloudError">{{cloudError}}</cloud-error>
+        <div class="form-group">
+          <ajax-button type="submit" :syncing="syncing" @click="logMeIn()" class="btn-dark btn-lg btn-block">Start Session</ajax-button>
+        </div>
+
+      
+    </div>
+  </div>
+  
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

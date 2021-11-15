@@ -1,0 +1,78 @@
+#welcome {
+
+  .user_element_header:hover{
+    background-color: rgb(82, 81, 81);
+  }
+  .user_element_header{
+    background-color: rgb(149, 151, 153);
+    border-radius:  10px  10px 0px 0px;
+    color:aliceblue;
+    text-align: center;
+    margin-top: 30px;
+    cursor: pointer;
+
+    h2{
+      width: 100%;
+    }
+  }
+
+  .user_element{
+    background-color: rgb(197, 207, 216);
+    border-radius:  0px  0px 10px 10px;
+    display: flex;
+    font-weight: 700;
+    padding-top: 15px;
+  }
+
+ 
+  .form_bubble{
+    background-color: aliceblue;
+    color: black;
+    border-radius: 10px;
+    // text-align: center;
+    
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+
+  .build_list{
+    height: 195px;
+    overflow-y: scroll;
+    tr{
+      border-bottom: 1px solid rgb(22, 5, 5);
+    }
+    td{
+      padding: 10px;
+    }
+  }
+
+  .update_delete_user_info_button_container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 15px;
+  }
+
+  .user_control_inputs{
+    text-align: center;
+    width:100%;
+  }
+
+  .customer_changes_notify{
+    display: none;
+  }
+
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+  .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  .modal-dialog{
+    color:black;
+  }
+
+}

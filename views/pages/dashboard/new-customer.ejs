@@ -1,0 +1,37 @@
+<div id="new-customer" v-cloak>
+  <div class="container-fluid pt-5 pb-5" v-if="!cloudSuccess">
+    <h1 class="text-center">Create a New Customer</h1>
+    <div style="max-width: 450px;" class="mx-auto" >
+      <hr/>
+      <ajax-form action="newCustomer" :syncing.sync="syncing" :cloud-error.sync="cloudError" :form-errors.sync="formErrors" :form-data="formData" :form-rules="formRules" @submitted="submittedForm()">
+        
+        <div class="form-group">
+          <label for="company-name">Company</label>
+          <input class="form-control" id="company-name" type="text"  :class="[formErrors.companyName ? 'is-invalid' : '']" v-model.trim="formData.companyName" placeholder="NBC News inc."  focus-first>
+          <div class="invalid-feedback" v-if="formErrors.companyName">Please enter your new client's company name.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="contact-name">Contact Name</label>
+          <input class="form-control" id="contact-name" type="text"  :class="[formErrors.contactName ? 'is-invalid' : '']" v-model.trim="formData.contactName" placeholder="Matt Lower" >
+          <div class="invalid-feedback" v-if="formErrors.contactName">Please enter your full name.</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="contact-email">Contact Email</label>
+          <input class="form-control" id="contact-email" type="email"  :class="[formErrors.contactEmail ? 'is-invalid' : '']" v-model.trim="formData.contactEmail" placeholder="matt@nbc.com" >
+          <div class="invalid-feedback" v-if="formErrors.contactEmail">Please enter a valid email address.</div>
+        </div>
+        
+        <cloud-error v-if="cloudError==='emailAlreadyInUse'">It looks like there's already an account with your email address. If you forgot your password, you can recover it <a href="password/forgot">here</a>.</cloud-error>
+        <cloud-error v-else-if="cloudError"></cloud-error>
+        <div class="form-group">
+          <ajax-button type="submit" :syncing="syncing" class="btn-dark btn-lg btn-block">Create Customer</ajax-button>
+        </div>
+      </ajax-form>
+      
+    </div>
+  </div>
+  
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

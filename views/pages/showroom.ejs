@@ -1,0 +1,149 @@
+<div id="showroom" class="noselect" v-cloak>
+  
+    <canvas id="render-window">
+
+    </canvas>
+
+    <div id="right-controls" style="overflow-y: auto;">
+        <div class="container-fluid">
+            <div v-if="isLoggedInAgent">  
+               
+
+
+                <div class="row bottom-bumper" v-for="(slot, slotIndex) in templateWithSlots.slots" v-bind:key="slotIndex" >
+                    
+                    <div class="col">
+                        <div class="info-bubble full-center-content">
+                            <h4>{{slot.slotName}}</h4>
+                            <span style="padding: 4px; background-color: orange; border-radius: 6px; margin-bottom:4px;" v-if="(slot.nonLineItem)">Non Line Item</span>
+
+                            <div class="switch-field bottom-bumper">
+                                <div>
+                                    <input type="radio" :id="'none-'+slot.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" value="none" />
+                                    <label @click="callRemovePart(slotIndex, selectedPartForSlot[slotIndex])" :for="'none-'+slot.id">None</label>
+                                </div>
+
+                                <div v-for="(part, partIndex) in slot.parts" v-if="!part.doNotDisplay">
+                                    <input  @click="callUpdateBuildPart(slotIndex, partIndex, slot.id)" type="radio" :id="part.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" :value="partIndex" />
+                                    <label  :for="part.id">{{part.friendlyName}}</label>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+            <div v-else>
+                <div class="row">
+                    <div class="col">
+                        <h4 class="full-center-content b-parts-heading bottom-bumper">Build Parts</h4>
+                    </div>
+                </div>
+
+                <div class="row" v-for="(bPart, bPartIndex) in build.buildParts" v-bind:key="bPartIndex">
+                    <div class="col-4">
+                        <p>{{bPart.partInfo.partCode}}</p>
+                    </div>
+                    <div class="col-8">
+                        <p>{{bPart.partInfo.friendlyName}}</p>
+                    </div>
+                    <div class="col-12">
+                        <p class="text-center">{{bPart.partInfo.partDescription}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <pre style="color:white">
+                {{selectedPartForSlot}}
+            </pre>
+            
+        </div>
+
+    </div>
+
+    <div id="left-controls">
+        <div style="display:flex; flex-direction:column; height:100%" class="container-fluid">
+            
+            <div class="row bottom-bumper">
+                <div class="col-4 no-gutters">
+                    <img src="/images/logo.png" style="width:100%">            
+                </div>
+                
+                <div class="col full-center-content">
+                    
+                    <span>Agent: {{salesAgent.fullName}}</span>
+                    <span>Email: {{salesAgent.emailAddress}}</span>
+                </div>
+               
+            </div>
+
+            <div class="row bottom-bumper">
+                <div class="col  full-center-content">
+
+                    <p>{{salesAgent.fullName}}: 
+                        <span v-if="agentOnline" class="green">Connected &#9741; </span>
+                        <span class="red" v-else>offline &#9737; </span>
+                    </p>
+                
+                    <p>{{client.contactName}}: 
+                        <span v-if="clientOnline" class="green">Connected &#9741; </span>
+                        <span class="red" v-else>offline &#9737; </span> 
+                    </p> 
+
+
+
+                </div>
+            </div>
+            <div class="info-bubble bottom-bumper">
+               
+                <div class="row ">
+                    <div class="col  full-center-content ">
+                
+                            <h5>{{client.companyName}}</h5>
+                            <h6>{{client.contactName}}</h6>
+                            <h6>{{client.contactEmail}}</h6>
+                            <div style="border-bottom:1px solid; width:85%;"></div>
+                    </div>
+                </div>
+                
+                <div class="row bottom-bumper">
+                    <div class="col-12  full-center-content  ">
+                        <span>Build Name:</span>
+                        <h4>{{build.buildName}}</h4>
+                    </div>
+                </div>
+
+            </div>
+            <div class="bottom-bumper flex-grow-1">
+                <div style="height: 100%;" class="row">
+                    <div class="col horizontal-center flex-grow-1">
+                        <span>Notes:</span>
+                        <textarea v-if="isLoggedInAgent"  class="bottom-bumper flex-grow-1" name="build-notes" id="buid-notes" v-model="build.buildNotes"></textarea>
+                        <textarea style="resize:none;" disabled v-else class="bottom-bumper flex-grow-1" name="build-notes" id="buid-notes" v-model="build.buildNotes"></textarea>
+                        <button v-if="isLoggedInAgent" class="btn btn-success" @click="updateNotes">Save Notes</button>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            
+            
+                   
+        </div>
+
+            
+    </div>
+
+    <div v-if="(!isLoggedInAgent)" class="nav-legend-surround">
+        <div class="row">
+            
+            <div class="col-10 offset-1 ">
+                <p class="text-center">3D Navigation</p>
+                <img src="/images/nav-legend.png" id="nav-legend-image">
+            </div>
+        </div>
+    </div>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

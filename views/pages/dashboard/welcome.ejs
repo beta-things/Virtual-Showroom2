@@ -1,0 +1,208 @@
+<div id="welcome">
+  <account-notification-banner></account-notification-banner>
+  <div class="container-fluid pt-5 pb-5">
+    <h1>Dashboard</h1>
+    <% if(me.isSuperAdmin) { %>
+      <p> YOU ARE SUPER ADMIN</p>
+
+      <h2>All Agents are:</h2>
+
+      <div id="users_list" class="col-6">
+          <div v-for="(user, index) in allUsers">
+            <div class="row user_element_header" >
+              <h2>{{user.fullName}}</h2>
+            </div>
+
+            <div class="row user_element" > 
+              <ajax-form style="display: flex;" action="updateOneSalesperson" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingUpdateUserForm" @submitted="submittedUpdateUserFrom()">
+                <div class="col-8 user_info_bar">
+                    
+                  <div class="form_bubble">
+                    User ID: # {{user.id}}
+                  </div>
+                  <div class="form_bubble">
+                    User Type:  <span v-if="allUsers[index].isSuperAdmin">Super Admin</span> <span v-else>Sales</span>
+                  </div>
+                  
+                  <div class="form_bubble">
+                    <p>Full Name</p>
+                
+                    <input class="user_control_inputs" name="full-name" id="full-name" type="text" v-model.lazy="user.fullName"  >
+                
+                    <input name="id" type="hidden" v-model="allUsers[index].id">
+                    
+                  </div>
+                  <div class="form_bubble">
+                    <p>Email Address</p>
+                
+                    <input class="user_control_inputs" name="email-address" id="email-address" type="text" v-model="allUsers[index].emailAddress"  >
+                
+                  </div>
+                                    
+                </div>
+                
+                <div class="col-6 update_delete_user_info_button_container">
+                  <a style="color: white;" class="btn btn-danger" @click="attemptDeleteOneUser(user.id)" > DELETE USER</a> 
+                  <ajax-button type="submit" @click="setUpdatingForm(index)" :syncing="syncing" class="btn btn-success" > UPDATE INFO</ajax-button>
+                </div>
+              </ajax-form>
+            </div>
+          </div>
+        </div>
+    <% }else{ %>
+      
+      <div id="users_list" class="col-12">
+        <div class="customer_element" v-for="(customer, index) in currentUsersCustomers" >
+          
+          <div class="row user_element_header" @click="clickedFolderTab($event)" >
+            <h2>{{customer.companyName}}</h2>
+            
+          </div>
+
+          <div class="row user_element" style="display: none;" > 
+            <ajax-form class="col-3" style="display: flex; flex-direction: column;" action="updateOneCustomer" :syncing.sync="syncing" :cloud-error.sync="cloudError" :handle-parsing="handleParsingUpdateCustomerForm" @submitted="submittedUpdateCustomerFrom(customer.id)">
+              <div class="row">
+                
+                <div class="col-12 user_info_bar">
+
+                  <div class="row" >
+                    <div class="col">
+                      <div class="form_bubble">Customer ID: # {{customer.id}}</div>                    
+                    </div>
+                  </div>
+                  
+                  <div class="row" >
+                    <div class="col">
+                      <div class="form_bubble">
+                        <p>Company</p>
+                        <input name="company-name"  class="user_control_inputs" type="text" v-model.lazy="customer.companyName"  >
+                      </div>
+                    </div>
+                  </div> 
+
+                  <div class="row" >
+                    <div class="col">
+                      <div class="form_bubble">
+                        <p>Contact Name</p>
+                        <input name="contact-name" class="user_control_inputs" type="text" v-model="customer.contactName"  >
+                        <input name="id" type="hidden" v-model="customer.id">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row" >
+                    <div class="col">
+                      <div class="form_bubble">
+                        <p>Email Address</p>
+                        <input name="contact-email"  class="user_control_inputs" type="text" v-model="customer.contactEmail"  >
+                        <input name="id" type="hidden" v-model="customer.id">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="row" >
+                    <div class="col">
+                      <div class="form_bubble">
+                          <ajax-button type="submit" @click="setUpdatingCustomersForm(index)" :syncing="syncing" class="btn btn-success" > UPDATE INFO</ajax-button>
+                          <a style="color: white;" class="btn btn-danger" @click="attemptDeleteOneCustomer(customer.id)" > DELETE CUSTOMER</a> 
+                        <div class="customer_changes_notify" :id="'change_feedback_' + customer.id">Changes Saved!</div>                  
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                
+              </div>
+            </ajax-form>
+
+            <div class="col-9">
+              
+              <div class="row">
+                <div class="col">
+                  <h3 style="text-align: center; color: black;">Builds</h3>
+                  <div class="build_list form_bubble">
+                    <table>
+                      
+                      <tr>
+                        <td>Session Code</td>
+                        <td>Name</td>
+                        <td>Price</td>
+                        <td>Created</td>
+                        <td>Template</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                      
+                      <transition-group name="list" tag="p">
+                        <tr v-for="(build, buildIndex) in customer.builds" v-bind:key="buildIndex" class="list-item">
+                          <td>{{build.sessionCode}}</td>
+                          <td>{{build.buildName}}</td>
+                          <td>Incomplete</td>
+                          <td>{{new Date(build.createdAt).toLocaleString("en-US")}}</td>
+                          <td>{{build.templateName}}</td>
+                          <td><a :href=" '/showroom/' + build.sessionCode" class="btn btn-primary">ENTER BUILD></a></td>
+                          <td><button class="btn btn-danger" @click="attemptDeleteOneBuild(build.id, customer.id, build.buildName)">DELETE</button></td>
+                        </tr>
+                      </transition-group>
+                      
+                      <tr v-if="!customer.builds.length">
+                        <td>----------------</td>
+                        <td>----------------</td>
+                        <td>No</td>
+                        <td>Builds</td>
+                        <td>----------------</td>
+                        <td>----------------</td>
+                      </tr>
+
+                    </table>
+                  </div>  
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-12">
+                  <h4 style="text-align: center; color: black;">Create New Build</h4>
+                  <div class="form_bubble">
+                    <div class="col-12">
+                      <p>Build Name</p>
+                      <p><input :id="'typed-build-name-' + customer.id"  type="text" class="user_control_inputs"></p>
+                      <button class="btn btn-success" @click="createNewBuildForCustomer(customer.id)" >CREATE</button>
+                      </div>
+                  </div>
+                </div>               
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+     
+    <% } %>
+    
+  </div>
+
+  <router-view></router-view>
+
+  <!--MODAL to confirm deletion of build-->
+  
+  <modal v-if="confirmBuildDeleteModalOpen" v-cloak key="delete" @close="closeDeleteBuildModal()">
+    <p>Are you sure? delete build named "{{buildToDeleteName}}"  </p>
+    <button  type="submit" class="btn btn-danger ml-1" @click="deleteOneBuildForCustomer()" >Yes, remove build!</button>
+
+  </modal>
+
+  <!--MODAL to confirm deletion of user-->
+  <modal v-if="confirmUserDeleteModelOpen" v-cloak key="delete" @close="closeDeleteUserModal()">
+    <p>Are you sure? delete user {{selectedUserForDelete.fullName }} </p>
+    <button  type="submit" class="btn btn-danger ml-1" @click="deleteOneUser()" >Yes, remove user!</button>
+  </modal>
+
+  <!--MODAL to confirm deletion of CUSTOMER-->
+  <modal v-if="confirmCustomerDeleteModelOpen" v-cloak key="delete" @close="closeDeleteCustomerModal()">
+    <p>Are you sure? Delete customer: {{selectedCustomerForDelete.companyName}}</p>
+    <button  type="submit" class="btn btn-danger ml-1" @click="deleteOneCustomer()" >Yes, remove customer!</button>
+  </modal>
+
+</div>
+<%- /* Expose locals as `window.SAILS_LOCALS` :: */ exposeLocalsToBrowser() %>

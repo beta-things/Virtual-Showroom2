@@ -1,0 +1,178 @@
+<div id="edit-template" class="container-fluid" v-cloak>
+
+  <div class="row">
+    
+    <div class="col-8 offset-2">
+      
+      <div class="row ">
+        <div class="col">
+          <h1 class="text-center">Edit Templates</h1>
+          <p class="text-center">Use this page to create new build templates. </p>
+        </div>
+      </div>
+      
+      <div class="top_input">
+        <h3 class="text-center">Create New Template</h3>
+        
+        <div class="row ">
+          <div class="col">
+            <span class="text-center">Template Name</span>
+            <input class="form-control" type="text" name="template-name" id="template-name" v-model="templateName" placeholder="eg:'2021 Models' ">
+          </div>
+        </div>
+
+        <div class="row ">
+          <div class="col">
+            <span class="text-center">Mesh File Name (exact):</span>
+            <input class="form-control" type="text" name="mesh-file-name" id="mesh-file-name" v-model="meshFileName" placeholder="eg:'components_file_01.GLB' ">
+          </div>
+        </div>
+        <hr>
+
+        <div class="row ">
+          <div class="col">
+            <span class="text-center">New Slot Name</span>
+            <input class="form-control" type="text" name="new-slot-name" id="new-slot-name" v-model="newSlotName"  placeholder="eg:'Bases'">
+          </div>
+        </div>
+
+
+
+
+        <h6 class="text-center">Non Line Item</h6>
+        
+        <div class="allowEmptyDecision">
+          
+          <div class="radio_entity">
+            <input type="radio" id="yesNonLineItem" value="yes" v-model="newSlotNonLineItem" style="height: 40px">
+            <label for="yesNonLineItem" class="radioLabel" >YES</label>
+          </div>
+          <div class="radio_entity">
+            <input type="radio" id="noNonLineItem" value="no" v-model="newSlotNonLineItem" style="height: 40px">
+            <label for="noNonLineItem" class="radioLabel">NO</label>
+          </div>
+
+        </div>
+
+        <div class="offsetObservances row">
+          <div class="col text-center">
+            <p>OBSERVE X/Y OFFSETS FROM:</p>
+            <p  v-for="(slot, slotIndex) in newSlots" v-bind:key="slotIndex">
+              <input type="checkbox" :id="slotIndex" :value="slotIndex" v-model="newSlotOffsetObservances" >
+              <label :for="slotIndex"> {{slot.name}}</label>
+            </p>
+            
+          </div>
+        </div>
+        
+
+        <div  class="row ">
+          <div class="col add-slot-button ">
+            <button class="btn btn-success " @click="addSlotVue">Add Part Slot</button>            
+          </div>
+        </div>
+        
+        <div class="row" v-if="(newSlots.length>0)">
+          <div class="col">
+            Stack Position
+          </div>
+          <div class="col">
+            Name
+          </div>
+          <div class="col">
+            Non Line Item
+          </div>
+          <div class="col">
+            Offset Observances
+          </div>
+          <div class="col">
+            
+          </div>      
+          
+        </div>
+
+        <div  class="show-reverse" v-if="(newSlots.length>0)"> 
+          <div class="row slots-readout" v-for="(slot, slotIndex) in newSlots" v-bind:key="slotIndex">
+            <div class="col">
+               #{{slotIndex}}
+            </div>
+            <div class="col">
+              {{slot.name}} 
+            </div>
+            <div class="col">
+              <span v-if="slot.nonLineItem">YES</span>
+              <span v-else>NO</span>
+            </div>
+            <div class="col">
+              {{slot.offsetObservances}}
+            </div>
+            <div class="col">
+              <button class="btn btn-danger" @click="removeSlot(slotIndex)">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <div  class="row" v-if="(newSlots.length>0)">
+          <div class="col">
+            <button class="btn btn-success addTemplateButton" @click="addTemplate">Save Template</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="templates-list">
+
+        <div class="row" v-for="(template, templateIndex) in templatesList" v-bind:key="templateIndex">
+          <div class="col-6 offset-3 template-entry">
+            <div class="row">
+              <div class="col">
+                <h3 class="text-center">#{{template.id}} {{template.templateName}} - {{template.meshFileName}} </h3>
+              </div>
+              <div class="col">
+                <button class="btn btn-info" v-if="(!template.isActiveTemplate)" @click="setActiveTemplate(template.id)">Set Active</button>
+                <button class="btn btn-success" v-else >ACTIVE</button>
+              </div>
+            </div>
+              
+            
+            <div class="row header-underline">
+              <div class="col">
+                Stack Position
+              </div>
+              <div class="col">
+                Slot Name
+              </div>
+              <div class="col">
+                Respects Offsets From
+              </div>
+          
+            </div>
+
+            <div class="row" v-for="(slot, slotIndex) in template.slots" v-bind:key="slotIndex">
+                <div class="col">
+                   {{slot.stackPosition}} 
+                </div>
+                <div class="col">
+                  {{slot.slotName}}                    
+                </div>
+                <div class="col">
+                  <div v-for="(offObs, offObsIndex) in slot.positionOffsetObservances">
+                    {{offObs.slotName}}, 
+                  </div>         
+                </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+        
+    </div>
+
+  </div>
+
+  
+
+  
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
