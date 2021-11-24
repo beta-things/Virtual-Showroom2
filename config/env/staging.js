@@ -54,7 +54,7 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
     //     ```
     //--------------------------------------------------------------------------
 
-    // url: 'redis://shared:some_password_everyone_knows@bigsquid.redistogo.com:9562/',
+    url: 'redis://redistogo:c2750cb3505727c9f299f3ce658fefe7@pike.redistogo.com:9031/',
     //--------------------------------------------------------------------------
     // /\  Hard-code your staging Redis server's `url`.
     // ||  (or use system env var: `sails_sockets__url`)
@@ -62,7 +62,7 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
   }),
 
   session: Object.assign({}, PRODUCTION_CONFIG.session, {
-    // url: 'redis://shared:some_password_everyone_knows@bigsquid.redistogo.com:9562/staging-sessions',
+    url: 'redis://redistogo:c2750cb3505727c9f299f3ce658fefe7@pike.redistogo.com:9031/',
     //--------------------------------------------------------------------------
     // /\  Hard-code your staging Redis server's `url` again here.
     // ||  (or use system env var: `sails_session__url`)
