@@ -51,12 +51,12 @@ module.exports = {
       sails.log("the new slot is");
       sails.log(newSlot);
       
-      //if there are  offsetObservances, loop them through and add them to the slot's collectio: positionOffsetObservances
+      //if there are  offsetObservances, loop them through and add them to the slot's collectio: posOffObserve
       //slots[i].offsetObservances[v] resolves to a stack position
       //slotToBDID[slots[i].offsetObservances[v]] resolves to that slot's DB ID
       if(slots[i].offsetObservances.length>0){
         for(v=0; v<slots[i].offsetObservances.length; v++){
-          await Slot.addToCollection(newSlot.id, 'positionOffsetObservances', slotToDBID[slots[i].offsetObservances[v]]);
+          await Slot.addToCollection(newSlot.id, 'posOffObserve', slotToDBID[slots[i].offsetObservances[v]]);
         }
       }                    
     }

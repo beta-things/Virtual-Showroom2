@@ -45,9 +45,9 @@ module.exports = {
 
     //for every slot, add parts
     for(var i=0; i<templateWithSlots.slots.length; i++){
-      //add the positionOffsetObservances to the slot level
-       var foundSlot = await Slot.findOne({id : templateWithSlots.slots[i].id}).populate('positionOffsetObservances');
-       templateWithSlots.slots[i].positionOffsetObservances = foundSlot.positionOffsetObservances;
+      //add the posOffObserve to the slot level
+       var foundSlot = await Slot.findOne({id : templateWithSlots.slots[i].id}).populate('posOffObserve');
+       templateWithSlots.slots[i].posOffObserve = foundSlot.posOffObserve;
 
 
       var ownerSlotId = templateWithSlots.slots[i].id;

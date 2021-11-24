@@ -47,7 +47,7 @@ module.exports = {
       collection: "parts",
       via:"owner"
     }, 
-    positionOffsetObservances:{ //where we store entries about which pre-occuring slots in the stack will have their x/y offsets honored by parts in this slot
+    posOffObserve:{ //where we store entries about which pre-occuring slots in the stack will have their x/y offsets honored by parts in this slot
       collection: "slot"
     }
 

@@ -25,7 +25,7 @@ var constructPartsArray = function(templateWithSlots, allParts){
 										hasPreReq: part.hasPreReq,
 										preReqPartID: part.preReqPartID,
 										partID : part.id,
-										offsetObservances: slot.positionOffsetObservances
+										offsetObservances: slot.posOffObserve
 									};
 								
 				allParts.offstage[i][v] = {name: "place-holder"};
@@ -39,7 +39,7 @@ var constructPartsArray = function(templateWithSlots, allParts){
 											hasPreReq: part.hasPreReq,
 											preReqPartID: part.preReqPartID,
 											partID : part.id,
-											offsetObservances: slot.positionOffsetObservances
+											offsetObservances: slot.posOffObserve
 											};
 
 				if(!allParts.onstage[i]){//dont overwrite a placed object with a placeholder
