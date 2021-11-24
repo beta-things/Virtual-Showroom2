@@ -41,9 +41,8 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
 
     onlyAllowOrigins: [
       'http://localhost:1337',
-      'https://vs-staging.herokuapp.com/',
-      'http://vs-staging.herokuapp.com/',
-      // 'https://staging.example.com',
+      'https://vs-staging.herokuapp.com',
+      'https://showroom.tekskil.com',
       // 'http://staging.example.com',
     ],
     //--------------------------------------------------------------------------
@@ -71,7 +70,7 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
 
   custom: Object.assign({}, PRODUCTION_CONFIG.custom, {
 
-    baseUrl: 'https://vs-staging.herokuapp.com',
+    baseUrl: 'https://showroom.tekskil.com',
     //--------------------------------------------------------------------------
     // /\  Hard-code the base URL where your staging environment is hosted.
     // ||  (or use system env var: `sails_custom__baseUrl`)

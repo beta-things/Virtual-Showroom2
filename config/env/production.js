@@ -252,7 +252,7 @@ module.exports = {
     ***************************************************************************/
     onlyAllowOrigins: [
       'https://vs-staging.herokuapp.com',
-      //'https://staging.example.com',
+      'http://vs-staging.herokuapp.com/',
     ],
 
 
