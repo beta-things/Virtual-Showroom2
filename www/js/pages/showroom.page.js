@@ -171,7 +171,7 @@ parasails.registerPage('showroom', {
 
       await importMeshItems(this.scene, this.templateWithSlots.meshFileName);
 
-      addAndSetDefaultCamera(this.scene, this.camera, this.canvas);
+      this.camera = addAndSetDefaultCamera(this.scene, this.camera, this.canvas);
       
       constructPartsArray(this.templateWithSlots, this.allParts);
 
@@ -245,8 +245,35 @@ parasails.registerPage('showroom', {
     formatPrice: function(formValue){
       console.log("form value is "+formValue);
       return "1331.11";
-    }
-    
+    },
+    makeScreenShot: async function(buildCode){
+      var  canvas = document.getElementById('render-window');
+      canvas.style.width = "400px";
+      canvas.style.height = "800px";
+      this.engine.resize();
+
+      this.camera.alpha = 1.04;
+      this.camera.beta = 1.80;
+      this.camera.radius = 3;
+
+      this.scene.clearColor = BABYLON.Color3.White();
+     
+      var image = await BABYLON.Tools.CreateScreenshotAsync(this.engine, this.camera, {width:400, height:800});
+
+      await Cloud.uploadScreenshot.with({buildCode: buildCode, photo:image});
+      console.log("IMAGE FINSIHED UPLAODING");
+
+      window.location.replace("/quote/"+buildCode);
+
+      this.scene.clearColor = BABYLON.Color3.Black();
+
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
+      this.engine.resize();
+  
+
+
+    },
     
   }
 });

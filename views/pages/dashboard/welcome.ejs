@@ -140,7 +140,7 @@
                           <td>Incomplete</td>
                           <td>{{new Date(build.createdAt).toLocaleString("en-US")}}</td>
                           <td>{{build.templateName}}</td>
-                          <td><ajax-button  @click="redirectToBuild(build.sessionCode)" class="btn-primary btn-block">ENTER BUILD></ajax-button></td>
+                          <td><ajax-button :syncing="loadingBuild" @click="redirectToBuild(build.sessionCode)" class="btn-primary btn-block">ENTER BUILD></ajax-button></td>
                           
                           <td><button class="btn btn-danger" @click="attemptDeleteOneBuild(build.id, customer.id, build.buildName)">DELETE</button></td>
                         </tr>
