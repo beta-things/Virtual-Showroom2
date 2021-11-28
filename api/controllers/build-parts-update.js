@@ -59,7 +59,7 @@ module.exports = {
         
           //for each, in this slot and above, search delete from Buildparts
           for(i=inputs.slotIndex; i<template.slots.length; i++){
-            await Buildparts.destroy({slot: template.slots[i].id});
+            await Buildparts.destroy({slot: template.slots[i].id, AssociatedBuild: inputs.buildID});
           }
 
         }else{
@@ -67,7 +67,7 @@ module.exports = {
           if(buildPartInSlot){//do we have any buildparts for this slot?
             //for each above this slot, delete from Buildparts
             for(i=inputs.slotIndex+1; i<template.slots.length; i++){
-              await Buildparts.destroy({slot: template.slots[i].id});
+              await Buildparts.destroy({slot: template.slots[i].id, AssociatedBuild: inputs.buildID});
             }
             await Buildparts.update({id:buildPartInSlot.id})
             .set({
@@ -76,7 +76,7 @@ module.exports = {
           }else{//no buildParts for slot so we can just add
             //for each, in this slot and above, search delete from Buildparts
             for(i=inputs.slotIndex; i<template.slots.length; i++){
-              await Buildparts.destroy({slot: template.slots[i].id});
+              await Buildparts.destroy({slot: template.slots[i].id, AssociatedBuild: inputs.buildID});
             }
             await Buildparts.create({AssociatedBuild: inputs.buildID, part: inputs.newPartId, slot: inputs.slotID});
           }

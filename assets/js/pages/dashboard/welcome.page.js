@@ -10,6 +10,7 @@ parasails.registerPage('welcome', {
     cloudError: '',
     allUsers: undefined,
     submittingForm : '',
+    loadingBuild: false,
     
     currentUsersCustomers: undefined,
     selectedCustomerForDelete: undefined,
@@ -181,6 +182,11 @@ parasails.registerPage('welcome', {
 
     submittedUpdateUserFrom: function(){
       console.log("sent info");
+    },
+
+    redirectToBuild: function(sessionCode){
+      this.loadingBuild = true;
+      window.location.replace("/showroom/"+sessionCode);
     }
 
   }
