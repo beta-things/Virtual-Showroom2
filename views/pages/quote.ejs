@@ -1,0 +1,15 @@
+<div id="quote" v-cloak>
+
+  <div>
+    <img :src=" '/screenshots/'+build.sessionCode+'.png'"/>
+  </div>
+
+  <div>
+    <pre style="color:white;">
+    {{build}}
+  </pre>
+</div>
+  
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

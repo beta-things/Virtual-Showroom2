@@ -68,6 +68,8 @@ var addAndSetDefaultCamera = function(scene, camera, canvas){
 
 	scene.activeCamera = camera;
 
+	return camera;
+
 }
 
 //SECONDARY CAMERA MAGICK
@@ -170,6 +172,10 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 
 			var foundTopLevelMesh = scene.getNodeByName(stagingParts.onstage[t].name);
 
+			if(!foundTopLevelMesh){
+				console.log("failed to find mesh named: "+stagingParts.onstage[t].name);
+			}
+
 			//find mesh's children then find the children's animation groups , then combine them
 			//follow every lineage trail to extract all child meshes into an array  
 			var allChildMeshes = getAllMeshChildren(foundTopLevelMesh);
@@ -247,6 +253,10 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 			if(stagingParts.offstage[i][v].name != "place-holder"){
 				var foundMesh = scene.getNodeByName(stagingParts.offstage[i][v].name);
 				//build fancy animation group from all the children
+
+				if(!foundMesh){
+					console.log("failed to find mesh named: "+stagingParts.offstage[i][v].name);
+				}
 				
 				var customAnimGroup = [];
 	

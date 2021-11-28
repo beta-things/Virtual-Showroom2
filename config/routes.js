@@ -39,6 +39,7 @@ module.exports.routes = {
   'GET /': { action: 'view-enter' },
   'GET /dashboard/edit-template': { action: 'dashboard/view-edit-template' },
   'GET /dashboard/edit-parts': { action: 'dashboard/view-edit-parts' },
+  'GET /quote/:sessionCode': { action: 'view-quote' },
   
 
   //  ╔╦╗╦╔═╗╔═╗  ╦═╗╔═╗╔╦╗╦╦═╗╔═╗╔═╗╔╦╗╔═╗   ┬   ╔╦╗╔═╗╦ ╦╔╗╔╦  ╔═╗╔═╗╔╦╗╔═╗
@@ -86,5 +87,6 @@ module.exports.routes = {
   'GET /api/v1/build-notes': { action: 'build-notes' },
   'GET /api/v1/meeting-participants': { action: 'meeting-participants' },
   'GET /api/v1/build-parts-update': { action: 'build-parts-update' },
+  'POST /api/v1/upload-screenshot': { action: 'upload-screenshot' },
   
 };
