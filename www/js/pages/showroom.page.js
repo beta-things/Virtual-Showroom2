@@ -20,6 +20,7 @@ parasails.registerPage('showroom', {
 
     selectedPartForSlot: [],
     partIsLoading:[],
+    loadingQuote:false,
 
     templateWithSlots: undefined,
     priceForSlot: [],
@@ -253,6 +254,8 @@ parasails.registerPage('showroom', {
       return "1331.11";
     },
     makeScreenShot: async function(buildCode){
+      this.loadingQuote = true;
+
       var  canvas = document.getElementById('render-window');
       canvas.style.width = "400px";
       canvas.style.height = "800px";
