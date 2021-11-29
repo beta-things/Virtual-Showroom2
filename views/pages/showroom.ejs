@@ -17,7 +17,7 @@
                             <h4>{{slot.slotName}}</h4>
                             <span style="padding: 4px; background-color: orange; border-radius: 6px; margin-bottom:4px;" v-if="(slot.nonLineItem)">Non Line Item</span>
 
-                            <div class="switch-field bottom-bumper">
+                            <div class="switch-field bottom-bumper" >
                                 <div>
                                     <input type="radio" :id="'none-'+slot.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" value="none" />
                                     <label @click="callRemovePart(slotIndex, selectedPartForSlot[slotIndex])" :for="'none-'+slot.id">None</label>
@@ -27,6 +27,12 @@
                                     <input  @click="callUpdateBuildPart(slotIndex, partIndex, slot.id)" type="radio" :id="part.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" :value="partIndex" />
                                     <label  :for="part.id">{{part.friendlyName}}</label>
                                     
+                                </div>
+                            </div>
+                            <div class="menu-overlay" v-if="partIsLoading[slotIndex]">
+                                <div>
+                                    <img src="/images/part-loading.gif">
+                                    <span style="color:black; opacity: 100%;" >Loading</span>
                                 </div>
                             </div>
                             

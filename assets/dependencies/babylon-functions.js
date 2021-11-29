@@ -450,7 +450,7 @@ var swapPart = async function(stackPosition, offstageID, staged, scene, mirrorOB
 			}
 		}
 		//now add the part to be scapped in
-		addPart(stackPosition, offstageID, staged, scene, mirrorOBJ);
+		await addPart(stackPosition, offstageID, staged, scene, mirrorOBJ);
 
 	}
 }

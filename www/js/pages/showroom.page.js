@@ -19,6 +19,7 @@ parasails.registerPage('showroom', {
     clientOnline: false,
 
     selectedPartForSlot: [],
+    partIsLoading:[],
 
     templateWithSlots: undefined,
     priceForSlot: [],
@@ -79,13 +80,17 @@ parasails.registerPage('showroom', {
       if(data.deleted){
         //go through every slot above the one being removed, and remove them if not empty
         await removePart(data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene);
+        this.partIsLoading[data.slotIndex] = false;
       }else{
         var slotContent = _.find(this.build.buildParts, {slot:data.slotID});
         if(slotContent){//do we already have something in that slot?
           await swapPart(data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//yes: do a swap
+          this.partIsLoading[data.slotIndex] = false; 
         }else{
           await addPart(data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//no: just add it
-        } 
+          this.partIsLoading[data.slotIndex] = false; 
+        }
+        
         
       }
       
@@ -183,6 +188,7 @@ parasails.registerPage('showroom', {
     },
                           //index       , index    ,   ID,    
     callUpdateBuildPart: function(stackPosition, offstageID, slotID ){
+      this.partIsLoading[stackPosition] = true;
       var newPartID = this.templateWithSlots.slots[stackPosition].parts[offstageID].id;
       //swapPart(stackPosition, offstageID, this.stagedProduct, this.scene);
       io.socket.get('/api/v1/build-parts-update', {buildID: this.build.id, 
@@ -210,7 +216,7 @@ parasails.registerPage('showroom', {
     },
 
     callRemovePart: function(slotIndex, offstageID){
- 
+      this.partIsLoading[slotIndex] = true;
       io.socket.get('/api/v1/build-parts-update', {
         buildID: this.build.id, 
         sessionCode: this.build.sessionCode, 
