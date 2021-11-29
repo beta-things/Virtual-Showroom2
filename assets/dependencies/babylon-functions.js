@@ -384,20 +384,22 @@ var getAnimatableGroupCurrentFrame = function(animatable){
 
 var addPart = async function(stackPosition, offstageID, staged, scene, mirrorOBJ){
 
-	var theADD = async function(staged){	
-		var replacing = staged.offstage[stackPosition][offstageID]; 
-		//for rapid clicking, the staged element needs to update before animations finish.
-		staged.onstage[stackPosition] = replacing;
-		staged.offstage[stackPosition][offstageID] = null;
+	var theADD = async function(staged){
+		return new Promise (resolve => {
+			var replacing = staged.offstage[stackPosition][offstageID]; 
+			//for rapid clicking, the staged element needs to update before animations finish.
+			staged.onstage[stackPosition] = replacing;
+			staged.offstage[stackPosition][offstageID] = null;
 
-		replacing.part.animations.push(zSlideL);
-		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
+			replacing.part.animations.push(zSlideL);
+			scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
-			
-			replacing.animGroup.start(false, -1, 2, 0, false);
-			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
-				regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
-				return true;
+				
+				replacing.animGroup.start(false, -1, 2, 0, false);
+				replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
+					regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
+					resolve('resolved');
+				});
 			});
 		});
 	}

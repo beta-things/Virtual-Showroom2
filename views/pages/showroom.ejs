@@ -29,19 +29,23 @@
                                     
                                 </div>
                             </div>
-                            <div class="menu-overlay" v-if="partIsLoading[slotIndex]">
-                                <div>
-                                    <img src="/images/part-loading.gif">
-                                    <span style="color:black; opacity: 100%;" >Loading</span>
+                            <transition name="fade">
+                                <div class="menu-overlay" v-if="partIsLoading[slotIndex]">
+                                    <div>
+                                        <img src="/images/part-loading.gif">
+                                        <span style="color:black; opacity: 100%;" >Loading</span>
+                                    </div>
                                 </div>
-                            </div>
+                            </transition>
                             
                         </div>
                     </div>
                 
                 </div>
                 <div class="row bottom-bumper">
-                    <button @click="makeScreenShot(build.sessionCode)" >print image</button>
+                    <div class="col">
+                        <ajax-button :syncing="loadingQuote" @click="makeScreenShot(build.sessionCode)" class="btn-primary btn-block">Go to Quote ></ajax-button>
+                    </div>
                 </div>
                 
             </div>
