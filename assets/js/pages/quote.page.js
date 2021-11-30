@@ -5,7 +5,8 @@ parasails.registerPage('quote', {
   data: {
     //…
     templateWithSlots: undefined,
-    build: undefined
+    build: undefined,
+    loadingBuild: false,
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -22,6 +23,11 @@ parasails.registerPage('quote', {
   //  ║║║║ ║ ║╣ ╠╦╝╠═╣║   ║ ║║ ║║║║╚═╗
   //  ╩╝╚╝ ╩ ╚═╝╩╚═╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
   methods: {
-    //…
+    redirectToBuild: function(sessionCode){
+      this.loadingBuild = true;
+      window.location.replace("/showroom/"+sessionCode);
+    },
+
   }
+  
 });

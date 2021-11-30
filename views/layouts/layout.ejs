@@ -48,7 +48,16 @@
   <body>
     <div purpose="page-wrap">
       <header style="padding:0px 1rem" class="navbar navbar-expand-sm navbar-dark bg-dark flex-column flex-md-row justify-content-between" purpose="page-header">
-        <a style="cursor: pointer; opacity:50%" class="navbar-brand mr-0" href="/"><img style="height: 40px;" class="logo" alt="Tekskil Logo" src="/images/logo.png"/></a>
+        <% if(me){ %>
+        <a style="cursor: pointer; opacity:50%" class="navbar-brand mr-0" href="/admin">
+          <img style="height: 40px;" class="logo" alt="Tekskil Logo" src="/images/logo.png"/>
+        </a>
+        <% }else{ %>
+          <a style="cursor: pointer; opacity:50%" class="navbar-brand mr-0" href="/">
+            <img style="height: 40px;" class="logo" alt="Tekskil Logo" src="/images/logo.png"/>
+          </a>
+        <% } %>
+
         <div class="navbar-nav flex-row">
           <!-- LOGGED-IN NAVIGATION -->
         <% if(me){ %>

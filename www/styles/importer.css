@@ -1191,3 +1191,11 @@ label {
 #edit-parts .wide-submit {
   width: 100%;
 }
+#quote .bottom-bumper {
+  margin-bottom: 15px;
+}
+#quote .price-field {
+  width: 97px;
+  font-size: x-large;
+  font-weight: 700;
+}

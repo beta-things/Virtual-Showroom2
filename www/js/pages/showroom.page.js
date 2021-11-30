@@ -258,16 +258,16 @@ parasails.registerPage('showroom', {
 
       var  canvas = document.getElementById('render-window');
       canvas.style.width = "400px";
-      canvas.style.height = "800px";
+      canvas.style.height = "600px";
       this.engine.resize();
 
       this.camera.alpha = 1.04;
       this.camera.beta = 1.80;
-      this.camera.radius = 3;
+      this.camera.radius = 2.75;
 
       this.scene.clearColor = BABYLON.Color3.White();
      
-      var image = await BABYLON.Tools.CreateScreenshotAsync(this.engine, this.camera, {width:400, height:800});
+      var image = await BABYLON.Tools.CreateScreenshotAsync(this.engine, this.camera, {width:400, height:600});
 
       await Cloud.uploadScreenshot.with({buildCode: buildCode, photo:image});
       console.log("IMAGE FINSIHED UPLAODING");

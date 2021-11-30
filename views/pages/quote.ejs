@@ -1,15 +1,48 @@
 <div id="quote" v-cloak>
 
-  <div>
-    <img :src=" '/screenShots/'+build.sessionCode+'.png'"/>
+  <div class="container">
+    
+    <div class="row bottom-bumper">
+      <div class="col-3">
+        <div class="bottom-bumper">
+          <ajax-button :syncing="loadingBuild" @click="redirectToBuild(build.sessionCode)" class="btn-primary btn-block ">RETURN TO BUILD</ajax-button>
+        </div>
+        <div class="bottom-bumper">
+          <img style="width:100%;" :src=" '/screenShots/'+build.sessionCode+'.png'"/>
+        </div>
+        <h3>Notes:</h3>
+        <p>{{build.buildNotes}}</p>
+      </div>
+      
+      <div class="col-9">
+        <h2>Quote For {{build.owner.companyName}} ({{build.buildName}})</h2>
+        
+        <div>
+          <div class="row" v-for="(bPart, index) in build.buildParts">
+            <div class="col">
+              <div>
+                {{bPart.partInfo.partCode}}-{{bPart.partInfo.friendlyName}}
+              </div>
+              <div>
+                {{bPart.partInfo.partDescription}} <input class="price-field" type="text" :value="bPart.price"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    
+
+
   </div>
 
-  <div>
-    <pre style="color:white;">
+  <pre style="color:white;">
     {{build}}
   </pre>
-</div>
   
 
 </div>
+
 <%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>

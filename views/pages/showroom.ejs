@@ -82,7 +82,13 @@
             
             <div class="row bottom-bumper">
                 <div class="col-4 no-gutters">
-                    <img src="/images/logo.png" style="width:100%">            
+                    <% if(me){ %>
+                        <a style="cursor: pointer;" href="/admin"> 
+                            <img src="/images/logo.png" style="width:100%"> 
+                        </a>
+                    <% }else{ %>
+                        <img src="/images/logo.png" style="width:100%"> 
+                    <% } %>
                 </div>
                 
                 <div class="col full-center-content">
