@@ -1,3 +1,5 @@
+const { setMaxListeners } = require("process");
+
 module.exports = {
 
 
@@ -36,7 +38,15 @@ module.exports = {
     //sails.log(info);
 
     var base64Data = inputs.photo.replace(/^data:image\/png;base64,/, "");
-    await require("fs").writeFile(".tmp/public/screenShots/"+inputs.buildCode+".png", base64Data, 'base64', function(err) {
+    //if we are in staging or production send to www 
+    if(sails.config.environment == 'staging' || sails.config.environment == 'production'){
+      var saveFolder = 'www/screenShots/';
+    }else{ //else send to .tmp
+      var saveFolder = '.tmp/public/screenShots/';
+    }
+   
+
+    await require("fs").writeFile(saveFolder+inputs.buildCode+".png", base64Data, 'base64', function(err) {
       if(err){
         console.log(err);
       }
