@@ -392,6 +392,8 @@ module.exports = {
 
   },
 
-
+  uploads:{
+    adapter: 'sails-hook-uploads',
+  },
 
 };
