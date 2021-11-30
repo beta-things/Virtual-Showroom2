@@ -35,7 +35,8 @@ module.exports = {
     //sails.log(inputs.photo);
 
     //var info = await sails.uploadOne(inputs.photo);
-    //sails.log(info);
+    sails.log('ENV ISSSSS');
+    sails.log(sails.config.environment);
 
     var base64Data = inputs.photo.replace(/^data:image\/png;base64,/, "");
     //if we are in staging or production send to www 
