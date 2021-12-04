@@ -35,7 +35,7 @@ module.exports = {
      var base64Data = inputs.photo.replace(/^data:image\/png;base64,/, "");
     //if we are in staging or production send to www 
     if(sails.config.environment == 'staging' || sails.config.environment == 'production'){
-      var saveFolder = 'www/screenShotsz/';
+      var saveFolder = 'www/screenShots/';
     }else{ //else send to .tmp
       var saveFolder = '.tmp/public/screenShots/';
     }
