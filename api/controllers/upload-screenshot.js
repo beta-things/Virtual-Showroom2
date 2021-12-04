@@ -45,11 +45,10 @@ module.exports = {
     }else{ //else send to .tmp
       var saveFolder = '.tmp/public/screenShots/';
     }
-   
 
     await require("fs").writeFile(saveFolder+inputs.buildCode+".png", base64Data, 'base64', function(err) {
       if(err){
-        console.log(err);
+        sails.log(err);
       }
     });
 
