@@ -1195,7 +1195,45 @@ label {
   margin-bottom: 15px;
 }
 #quote .price-field {
-  width: 97px;
+  width: 100%;
   font-size: x-large;
   font-weight: 700;
+  text-align: center;
+  background-color: #1a1b23;
+  color: aliceblue;
+}
+#quote .code-field {
+  width: 120px;
+  font-size: x-large;
+  font-weight: 700;
+  text-align: center;
+  background-color: #1a1b23;
+  color: aliceblue;
+}
+#quote .dollar-sign {
+  font-size: x-large;
+  font-weight: 700;
+  text-align: right;
+}
+#quote #notes-field {
+  width: 100%;
+  background-color: #1a1b23;
+  color: aliceblue;
+  resize: none;
+  height: 200px;
+}
+#quote .part-description-field {
+  width: 100%;
+  background-color: #1a1b23;
+  color: aliceblue;
+  resize: none;
+  height: 100px;
+}
+#quote .name-field {
+  width: 100%;
+  font-size: x-large;
+  font-weight: 700;
+  text-align: center;
+  background-color: #1a1b23;
+  color: aliceblue;
 }
