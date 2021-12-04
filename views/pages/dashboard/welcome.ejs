@@ -126,7 +126,7 @@
                       <tr>
                         <td>Session Code</td>
                         <td>Name</td>
-                        <td>Price</td>
+                        
                         <td>Created</td>
                         <td>Template</td>
                         <td></td>
@@ -137,7 +137,7 @@
                         <tr v-for="(build, buildIndex) in customer.builds" v-bind:key="buildIndex" class="list-item">
                           <td>{{build.sessionCode}}</td>
                           <td>{{build.buildName}}</td>
-                          <td>Incomplete</td>
+                          
                           <td>{{new Date(build.createdAt).toLocaleString("en-US")}}</td>
                           <td>{{build.templateName}}</td>
                           <td><ajax-button :syncing="loadingBuild" @click="redirectToBuild(build.sessionCode)" class="btn-primary btn-block">ENTER BUILD></ajax-button></td>
