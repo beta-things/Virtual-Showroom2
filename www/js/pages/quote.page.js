@@ -9,13 +9,14 @@ parasails.registerPage('quote', {
     loadingBuild: false,
     priceTotal : 0,
     quoteLineItems: [],
+    cacheBuster: undefined
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
   //  ║  ║╠╣ ║╣ ║  ╚╦╝║  ║  ║╣
   //  ╩═╝╩╚  ╚═╝╚═╝ ╩ ╚═╝╩═╝╚═╝
   beforeMount: function() {
-    //…
+    this.cacheBuster = Date.now();
   },
   mounted: async function() {
     //…

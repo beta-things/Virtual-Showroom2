@@ -8,7 +8,7 @@
           <ajax-button :syncing="loadingBuild" @click="redirectToBuild(build.sessionCode)" class="btn-primary btn-block ">RETURN TO BUILD</ajax-button>
         </div>
         <div class="bottom-bumper">
-          <img style="width:100%;" :src=" '/screenShots/'+build.sessionCode+'.png'"/>
+          <img style="width:100%;" :src=" '/screenShots/'+build.sessionCode+'.png?'+cacheBuster"/>
         </div>
         <h3>Notes:</h3>
         <textarea class="flex-grow-1" name="build-notes" id="notes-field" v-model="build.buildNotes"></textarea>
