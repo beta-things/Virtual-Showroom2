@@ -35,8 +35,8 @@ parasails.registerPage('quote', {
     },
 
     updateTotalPrice: function(index){
-      if(index){
-        this.build.buildParts[index].price = parseFloat(this.build.buildParts[index].vuPrice);
+      if(index != undefined){
+        this.build.buildParts[index].price = parseFloat(this.build.buildParts[index].vuPrice); //update is being called so we know we are focused. therefore the value in vuPrice will be unformatted
       }
       this.priceTotal = 0;
       for(var i = 0; i<this.build.buildParts.length; i++){
@@ -59,15 +59,17 @@ parasails.registerPage('quote', {
     },
 
     focusPrice: function(index){
-      console.log("focus price");
-      console.log(this.build.buildParts[index].vuPrice);
-      console.log(this.build.buildParts[index].price);
-      this.build.buildParts[index].vuPrice = this.build.buildParts[index].price; 
+      if(this.build.buildParts[index].price == 0){
+        this.build.buildParts[index].vuPrice = "";
+      }else{
+        this.build.buildParts[index].vuPrice = this.build.buildParts[index].price;   
+      }
       this.$forceUpdate();
     },
     
     blurPrice: function(index){
-      console.log("blur price");
+      //send new price to db
+      
       this.pricesToDisplay();
       
     },
