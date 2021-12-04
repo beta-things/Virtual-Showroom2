@@ -32,16 +32,10 @@ module.exports = {
 
   fn: async function (inputs) {
 
-    //sails.log(inputs.photo);
-
-    //var info = await sails.uploadOne(inputs.photo);
-    sails.log('photo INFO');
-    sails.log(inputs.photo);
-
-    var base64Data = inputs.photo.replace(/^data:image\/png;base64,/, "");
+     var base64Data = inputs.photo.replace(/^data:image\/png;base64,/, "");
     //if we are in staging or production send to www 
     if(sails.config.environment == 'staging' || sails.config.environment == 'production'){
-      var saveFolder = 'www/screenShots/';
+      var saveFolder = 'www/screenShotsz/';
     }else{ //else send to .tmp
       var saveFolder = '.tmp/public/screenShots/';
     }
