@@ -36,7 +36,12 @@ parasails.registerPage('quote', {
 
     updateTotalPrice: function(index){
       if(index != undefined){
-        this.build.buildParts[index].price = parseFloat(this.build.buildParts[index].vuPrice); //update is being called so we know we are focused. therefore the value in vuPrice will be unformatted
+        var formInputToFloat = parseFloat(this.build.buildParts[index].vuPrice); //update is being called so we know we are focused. therefore the value in vuPrice will be unformatted
+        if(!Number.isNaN(formInputToFloat)){  
+          this.build.buildParts[index].price = formInputToFloat; 
+        }else{
+          this.build.buildParts[index].vuPrice = 0;
+        }
       }
       this.priceTotal = 0;
       for(var i = 0; i<this.build.buildParts.length; i++){
@@ -48,7 +53,7 @@ parasails.registerPage('quote', {
       this.priceTotal = Math.round(this.priceTotal * 100) / 100;
 
       this.priceTotal = this.priceTotal.toLocaleString();
-  
+      this.$forceUpdate();
     },
 
     pricesToDisplay: function(){
