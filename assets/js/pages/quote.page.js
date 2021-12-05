@@ -67,10 +67,14 @@ parasails.registerPage('quote', {
       this.$forceUpdate();
     },
     
-    blurPrice: function(index){
+    blurPrice: async function(index){
       //send new price to db
+      var bPartDBID = this.build.buildParts[index].id;
+      var newPrice = this.build.buildParts[index].price;
       
       this.pricesToDisplay();
+
+      await Cloud.updateQuotePrice.with({buildPartId: bPartDBID, price:newPrice});
       
     },
 

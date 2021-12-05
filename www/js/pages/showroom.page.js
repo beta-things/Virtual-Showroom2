@@ -270,8 +270,7 @@ parasails.registerPage('showroom', {
       var image = await BABYLON.Tools.CreateScreenshotAsync(this.engine, this.camera, {width:400, height:600});
 
       await Cloud.uploadScreenshot.with({buildCode: buildCode, photo:image});
-      console.log("IMAGE FINSIHED UPLAODING");
-
+    
       window.location.replace("/quote/"+buildCode);
 
       this.scene.clearColor = BABYLON.Color3.Black();

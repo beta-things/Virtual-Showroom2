@@ -88,5 +88,6 @@ module.exports.routes = {
   'GET /api/v1/meeting-participants': { action: 'meeting-participants' },
   'GET /api/v1/build-parts-update': { action: 'build-parts-update' },
   'POST /api/v1/upload-screenshot': { action: 'upload-screenshot' },
+  'PATCH /api/v1/update-quote-price': { action: 'update-quote-price' },
   
 };
