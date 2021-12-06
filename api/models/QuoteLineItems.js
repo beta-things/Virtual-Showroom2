@@ -14,7 +14,6 @@ module.exports = {
     //  ╩  ╩╚═╩╩ ╩╩ ╩ ╩ ╚╝ ╚═╝╚═╝
     friendlyName:{
       type: "string",
-      required: true,
       example: "PTZ Pedastle"
     },
    

@@ -15,12 +15,12 @@
       </div>
       
       <div class="col-9">
-        <h2 style="text-align: center; margin-bottom: 20px; border-bottom: 3px solid white;">Quote For {{build.owner.companyName}} ({{build.buildName}})</h2>
+        <h2 style="text-align: center; padding-bottom: 16px; margin-bottom: 20px; border-bottom: 3px solid white;">Quote For {{build.owner.companyName}} ({{build.buildName}})</h2>
         <div>
           <div class="row mt-2" v-for="(bPart, index) in build.buildParts" :key="index" style="border-bottom: 1px solid grey;">
            
             <div class="col-2">
-            <h3>{{bPart.partInfo.partCode}}</h3>
+            <h3 class="text-center">{{bPart.partInfo.partCode}}</h3>
            </div>
 
             <div class="col-7">
@@ -40,26 +40,33 @@
           </div>
 
           <!-- INPUT AREA-->
-          <div class="row mt-4" v-for="(qItem, index) in quoteLineItems" style="border-bottom: 1px solid grey;">
+          <div class="row mt-4" v-for="(qItem, index) in build.additionalLineItems" style="border-bottom: 1px solid grey;">
             <div class="col-12">
               <div class="row">
                 <div class="col-2">
-                  <input type="text" placeholder="XXX" class="code-field">
+
+                  <input type="text" placeholder="XXX" class="code-field" v-model="qItem.partCode"  @blur="blurAdditionItem(index)">
                  </div>
       
                   <div class="col-7">
                     <div>
-                      <input type="text" placeholder="PART NAME" class="name-field">
-                      <textarea placeholder="PART DESCRIPTION" class="flex-grow-1 part-description-field" ></textarea>
+                      <input type="text" placeholder="PART NAME" class="name-field" v-model="qItem.friendlyName" @blur="blurAdditionItem(index)">
+                      <textarea placeholder="PART DESCRIPTION" class="flex-grow-1 part-description-field" v-model="qItem.partDescription"  @blur="blurAdditionItem(index)"></textarea>
                     </div>
                   </div>
       
                   <div class="col-3">
-                    <div class="row">
+                    <div class="row mb-3">
                       <div class="col-2 dollar-sign">$</div>
-                      <div class="col-10 "><input  v-on:keyup="updateTotalPrice()" class="price-field" type="text" /></div>    
+                      <div class="col-10 "><input  v-on:keyup="updateTotalPrice()" class="price-field" type="text" v-model="qItem.vuPrice"  @blur="blurAdditionItem(index)"/></div>    
+                    </div>
+                    <div class="row d-flex justify-content-end">
+                      <div class="col-10 ">
+                        <ajax-button :syncing="loadingDelete" @click="deleteQuoteLineItem(qItem.id, index)" class="btn-danger btn-block ">REMOVE ITEM</ajax-button>              
+                      </div>
                     </div>
                   </div>
+
               </div>
               
             </div>

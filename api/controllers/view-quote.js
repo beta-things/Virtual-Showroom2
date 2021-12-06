@@ -29,6 +29,10 @@ module.exports = {
 
     var templateWithSlots = helper_return.templateWithSlots;
     var build = helper_return.build;
+    
+    //get additional quote line items and inject them into the build object
+    var additionalLineItems = await QuoteLineItems.find({AssociatedBuild: build.id}).sort('id ASC');
+    build.additionalLineItems = additionalLineItems;
 
     // Respond with view.
     return {
