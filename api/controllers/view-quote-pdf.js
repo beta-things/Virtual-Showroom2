@@ -60,15 +60,24 @@ module.exports = {
 
     var templateWithSlots = helper_return.templateWithSlots;
     var build = helper_return.build;
+    var salesAgent = {
+      fullName : helper_return.salesAgent.fullName,
+      emailAddress : helper_return.salesAgent.emailAddress
+    };
 
     //get additional quote line items and inject them into the build object
     var additionalLineItems = await QuoteLineItems.find({AssociatedBuild: build.id}).sort('id ASC');
     build.additionalLineItems = additionalLineItems;
+    var baseUrl = sails.config.custom.baseUrl;
+
+  
 
     // Respond with view.
     return {
       templateWithSlots: templateWithSlots,
       build: build,
+      salesAgent,salesAgent,
+      baseUrl: baseUrl
     };
 
   }

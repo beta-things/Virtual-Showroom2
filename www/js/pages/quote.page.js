@@ -11,6 +11,8 @@ parasails.registerPage('quote', {
     quoteLineItems: [],
     cacheBuster: undefined,
     loadingDelete: false,
+    loadingPDF: false,
+    showPDFLink: false,
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -157,6 +159,14 @@ parasails.registerPage('quote', {
      
         });
       
+    },
+
+    downloadPDF: async function(){
+      this.loadingPDF = true;
+      await Cloud.generatePdf.with({sessionCode: this.build.sessionCode , buildSecret: this.build.createdAt });
+      this.loadingPDF = false;
+      this.showPDFLink= true;
+
     }
 
   }

@@ -1240,6 +1240,10 @@ label {
   background-color: #1a1b23;
   color: aliceblue;
 }
+#quote .pdf-link {
+  font-size: x-large;
+  font-weight: 700;
+}
 #quote-pdf {
   background-color: white;
   color: black;
@@ -1284,4 +1288,14 @@ label {
   font-weight: 700;
   text-align: center;
   color: aliceblue;
+}
+#quote-pdf .q-header {
+  border-bottom: 3px solid black;
+}
+#quote-pdf .div-underline {
+  border-bottom: 3px solid black;
+  padding-bottom: 1em;
+}
+#quote-pdf .text-deco-none {
+  text-decoration: none;
 }

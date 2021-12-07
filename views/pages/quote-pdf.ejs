@@ -2,12 +2,42 @@
 
   <div class="container-fluid">
 
-    <div class="row mb-3">
-      <div class="col">
-        <h2 class="text-center pb-2" style="border-bottom: 3px solid white;">Quote For {{build.owner.companyName}} ({{build.buildName}})</h2>  
+    <div class="row mb-3 pt-3 div-underline">
+      <div class="col-2">
+        <img src="/images/LOGO-STANDARD.png" style="width:100%;" />
       </div>
-      
+      <div class="col-8 d-flex flex-column justify-content-center">
+        <h1 class="text-center" >OFFER SHEET ({{build.buildName}})</h1> 
+        <h5 class="text-center" >View in 3D: <a class="text-deco-none" :href="baseUrl+'showroom/'+build.sessionCode+'/'+build.owner.id" target="_blank" >{{baseUrl}}showroom/{{build.sessionCode}}/{{build.owner.id}}</a></h5> 
+      </div>
+      <div class="col-2">
+       <p>Date: {{dateOutput}}</p>
+      </div>
     </div>
+
+    <div class="row mb-3 pb-3 q-header">
+      
+      <div class="col-3 d-flex flex-column justify-content-center">
+        <h5>Contact:</h5>
+        <h3>{{salesAgent.fullName}}</h3>
+        <h3>{{salesAgent.emailAddress}}</h3>
+        <h3>1+(604)-985-2248</h3>
+      </div>
+      <div class="col-6">
+        
+      </div>
+
+      <div class="col-3 d-flex flex-column justify-content-center text-right">
+        <h5>Customer:</h5>
+        <h3>{{build.owner.companyName}}</h3>
+        <h3>{{build.owner.contactName}}</h3>
+        <h3>{{build.owner.contactEmail}}</h3>
+      </div>
+
+    </div>
+    
+
+    
     
     <div class="row mb-2">
       <div class="col-4">
@@ -93,8 +123,7 @@
 
       </div>
 
-    </div>
-    
+    </div>    
 
 
   </div>

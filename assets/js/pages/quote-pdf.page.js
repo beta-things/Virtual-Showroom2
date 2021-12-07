@@ -3,7 +3,12 @@ parasails.registerPage('quote-pdf', {
   //  ║║║║║ ║ ║╠═╣║    ╚═╗ ║ ╠═╣ ║ ║╣
   //  ╩╝╚╝╩ ╩ ╩╩ ╩╩═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝
   data: {
+    build: undefined,
+    templateWithSlots: undefined,
+    salesAgent: undefined,
     priceTotal : 0,
+    baseUrl: undefined,
+    dateOutput: undefined,
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -16,6 +21,15 @@ parasails.registerPage('quote-pdf', {
     
     this.pricesToDisplay();
     this.updateTotalPrice();
+
+    var lastEdit = this.build.updatedAt;
+    var date = new Date(lastEdit);
+
+    this.dateOutput = date.getDate()+
+          "/"+(date.getMonth()+1)+
+          "/"+date.getFullYear();
+    
+     
 
   },
 
