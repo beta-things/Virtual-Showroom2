@@ -40,6 +40,7 @@ module.exports.routes = {
   'GET /dashboard/edit-template': { action: 'dashboard/view-edit-template' },
   'GET /dashboard/edit-parts': { action: 'dashboard/view-edit-parts' },
   'GET /quote/:sessionCode': { action: 'view-quote' },
+  'GET /quote-pdf/:sessionCode/:buildSecret': { action: 'view-quote-pdf' },
   
 
   //  ╔╦╗╦╔═╗╔═╗  ╦═╗╔═╗╔╦╗╦╦═╗╔═╗╔═╗╔╦╗╔═╗   ┬   ╔╦╗╔═╗╦ ╦╔╗╔╦  ╔═╗╔═╗╔╦╗╔═╗

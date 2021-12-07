@@ -26,6 +26,7 @@ module.exports.policies = {
   'customer-login': true,
   'build-notes':true,
   'meeting-participants': true,
-  'build-parts-update': true
+  'build-parts-update': true,
+  'view-quote-pdf' : true,
 
 };

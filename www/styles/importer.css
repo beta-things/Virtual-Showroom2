@@ -1198,7 +1198,7 @@ label {
   width: 100%;
   font-size: x-large;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   background-color: #1a1b23;
   color: aliceblue;
 }
@@ -1238,5 +1238,50 @@ label {
   font-weight: 700;
   text-align: center;
   background-color: #1a1b23;
+  color: aliceblue;
+}
+#quote-pdf {
+  background-color: white;
+  color: black;
+}
+#quote-pdf .price-field {
+  width: 100%;
+  font-size: x-large;
+  font-weight: 700;
+  text-align: left;
+  color: black;
+}
+#quote-pdf .code-field {
+  width: 120px;
+  font-size: x-large;
+  font-weight: 700;
+  text-align: center;
+  color: black;
+}
+#quote-pdf .dollar-sign {
+  font-size: x-large;
+  font-weight: 700;
+  text-align: right;
+  position: relative;
+  right: -18px;
+  bottom: -3px;
+}
+#quote-pdf #notes-field {
+  width: 100%;
+  resize: none;
+  height: 200px;
+  color: black;
+}
+#quote-pdf .part-description-field {
+  width: 100%;
+  color: aliceblue;
+  resize: none;
+  height: 100px;
+}
+#quote-pdf .name-field {
+  width: 100%;
+  font-size: x-large;
+  font-weight: 700;
+  text-align: center;
   color: aliceblue;
 }

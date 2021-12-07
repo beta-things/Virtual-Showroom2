@@ -1,0 +1,103 @@
+<div id="quote-pdf" v-cloak>
+
+  <div class="container">
+
+    <div class="row mb-3">
+      <div class="col">
+        <h2 class="text-center pb-2" style="border-bottom: 3px solid white;">Quote For {{build.owner.companyName}} ({{build.buildName}})</h2>  
+      </div>
+      
+    </div>
+    
+    <div class="row mb-2">
+      <div class="col-4">
+        <div class="mb-2">
+          <img style="width:100%;" :src=" '/screenShots/'+build.sessionCode+'.png?'+cacheBuster"/>
+        </div>
+        <h3>Notes:</h3>
+        <textarea class="flex-grow-1" name="build-notes" id="notes-field" v-model="build.buildNotes"></textarea>
+      </div>
+      
+      <div class="col-8">
+        
+        <div>
+          <div class="row mt-2" v-for="(bPart, index) in build.buildParts" :key="index" style="border-bottom: 1px solid grey;">
+           
+            <div class="col-2">
+            <h3 class="text-center">{{bPart.partInfo.partCode}}</h3>
+           </div>
+
+            <div class="col-6">
+              <div>
+                <h4 class="text-center" >{{bPart.partInfo.friendlyName}}</h4>
+                <p>{{bPart.partInfo.partDescription}}</p> 
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="row">
+                <div class="col-2 dollar-sign">$</div>
+                <div class="col-10 price-field">{{build.buildParts[index].vuPrice}}</div>    
+              </div>
+            </div>
+            
+          </div>
+
+          <!-- INPUT AREA-->
+          <div class="row mt-4" v-for="(qItem, index) in build.additionalLineItems" style="border-bottom: 1px solid grey;">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-2 code-field">
+                  {{qItem.partCode}}
+                </div>
+      
+                  <div class="col-6">
+                    <div>
+                      <h4 class="text-center" >{{qItem.friendlyName}}</h4>
+                      <p>{{qItem.partDescription}}</p> 
+                    </div>
+                  </div>
+      
+                  <div class="col-4">
+                    <div class="row mb-3">
+                      <div class="col-2 dollar-sign">$</div>
+                      <div class="col-10 price-field">{{build.additionalLineItems[index].vuPrice}}</div>   
+                    </div>
+                    
+                  </div>
+
+              </div>
+              
+            </div>
+          </div>
+
+      
+
+          <div class="row mt-4">
+            <div class="col-8 text-right">
+              <h3>TOTAL:</h3>
+            </div>
+            <div class="col-4">
+              <div class="row">
+                <div class="col-2 dollar-sign">$</div>
+                <div class="col-10 ">
+                  <div class="price-field" type="text">
+                    {{priceTotal}}
+                  </div>
+                </div> 
+              </div> 
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    
+
+
+  </div>
+
+</div>
+<%- /* Expose server-rendered data as window.SAILS_LOCALS :: */ exposeLocalsToBrowser() %>
