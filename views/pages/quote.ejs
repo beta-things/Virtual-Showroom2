@@ -3,7 +3,7 @@
   <div class="container">
     
     <div class="row bottom-bumper">
-      <div class="col-3">
+      <div class="col-4">
         <div class="bottom-bumper">
           <ajax-button :syncing="loadingBuild" @click="redirectToBuild(build.sessionCode)" class="btn-primary btn-block ">RETURN TO BUILD</ajax-button>
         </div>
@@ -14,7 +14,7 @@
         <textarea class="flex-grow-1" name="build-notes" id="notes-field" v-model="build.buildNotes"></textarea>
       </div>
       
-      <div class="col-9">
+      <div class="col-8">
         <h2 style="text-align: center; padding-bottom: 16px; margin-bottom: 20px; border-bottom: 3px solid white;">Quote For {{build.owner.companyName}} ({{build.buildName}})</h2>
         <div>
           <div class="row mt-2" v-for="(bPart, index) in build.buildParts" :key="index" style="border-bottom: 1px solid grey;">
@@ -58,7 +58,7 @@
                   <div class="col-3">
                     <div class="row mb-3">
                       <div class="col-2 dollar-sign">$</div>
-                      <div class="col-10 "><input  v-on:keyup="updateTotalPrice()" class="price-field" type="text" v-model="qItem.vuPrice"  @blur="blurAdditionItem(index)"/></div>    
+                      <div class="col-10 "><input  v-on:keyup="updateTotalPrice(index, false)" class="price-field" type="text" v-model="build.additionalLineItems[index].vuPrice" @focus="focusPrice(index, false)"  @blur="blurPrice(index, false)"/></div>    
                     </div>
                     <div class="row d-flex justify-content-end">
                       <div class="col-10 ">
@@ -73,7 +73,7 @@
           </div>
 
           <div class="row mt-3">
-            <ajax-button @click="newQuoteLineItem" class="btn-primary btn-block ">NEW LINE ITEM</ajax-button>
+            <ajax-button @click="newQuoteLineItem" class="btn-success btn-block ">NEW LINE ITEM</ajax-button>
           </div>
 
           <div class="row mt-4">
@@ -83,7 +83,11 @@
             <div class="col-3">
               <div class="row">
                 <div class="col-2 dollar-sign">$</div>
-                <div class="col-10 "><input class="price-field" type="text" v-model="priceTotal"/></div> 
+                <div class="col-10 ">
+                  <div class="price-field" type="text">
+                    {{priceTotal}}
+                  </div>
+                </div> 
               </div> 
             </div>
           </div>

@@ -19,22 +19,21 @@ module.exports = {
 
     partCode:{
       type:"string",
-      defaultsTo: "",
+    
     },
    
     friendlyName:{
       type: "string",
-      defaultsTo: "",
+     
     },
 
     partDescription:{
       type: "string",
-      defaultsTo: ""
+      
     },
    
     price:{
       type: "number",
-      defaultsTo: 0.00,
     },
 
     deleteItem:{

@@ -37,7 +37,7 @@ parasails.registerPage('quote', {
 
     updateTotalPrice: function(index, buildPart=true){
       
-      if(buildPart){
+      if(buildPart){//is this a build part thing
         if(index != undefined){
           var formInputToFloat = parseFloat(this.build.buildParts[index].vuPrice); //update is being called so we know we are focused. therefore the value in vuPrice will be unformatted
           if(!Number.isNaN(formInputToFloat)){  
@@ -46,13 +46,13 @@ parasails.registerPage('quote', {
             this.build.buildParts[index].vuPrice = 0;
           }
         }
-      }else{
+      }else{//this is an additional line item thing
         if(index != undefined){
           var formInputToFloat = parseFloat(this.build.additionalLineItems[index].vuPrice); //update is being called so we know we are focused. therefore the value in vuPrice will be unformatted
           if(!Number.isNaN(formInputToFloat)){  
-            this.build.buildParts[index].price = formInputToFloat; 
+            this.build.additionalLineItems[index].price = formInputToFloat; 
           }else{
-            this.build.buildParts[index].vuPrice = 0;
+            this.build.additionalLineItems[index].vuPrice = 0;
           }
         }
       }
@@ -86,23 +86,42 @@ parasails.registerPage('quote', {
       this.$forceUpdate();
     },
 
-    focusPrice: function(index){
-      if(this.build.buildParts[index].price == 0){
-        this.build.buildParts[index].vuPrice = "";
-      }else{
-        this.build.buildParts[index].vuPrice = this.build.buildParts[index].price;   
+    focusPrice: function(index, buildPart=true){
+      if(buildPart){//for build parts 
+        if(this.build.buildParts[index].price == 0){
+          this.build.buildParts[index].vuPrice = "";
+        }else{
+          this.build.buildParts[index].vuPrice = this.build.buildParts[index].price;   
+        }
+      }else{//for additional line items
+        if(this.build.additionalLineItems[index].price == 0){
+          this.build.additionalLineItems[index].vuPrice = "";
+        }else{
+          this.build.additionalLineItems[index].vuPrice = this.build.additionalLineItems[index].price;   
+        }
       }
       this.$forceUpdate();
     },
     
-    blurPrice: async function(index){
-      //send new price to db
-      var bPartDBID = this.build.buildParts[index].id;
-      var newPrice = this.build.buildParts[index].price;
-      
-      this.pricesToDisplay();
+    blurPrice: async function(index, buildPart=true){
+      if(buildPart){
+        this.pricesToDisplay();
+        var bPartDBID = this.build.buildParts[index].id;
+        var newPrice = this.build.buildParts[index].price;
+        await Cloud.updateQuotePrice.with({buildPartId: bPartDBID, price:newPrice});
+      }else{
+        this.pricesToDisplay();
+        var addlItemID = this.build.additionalLineItems[index].id;
+        var newPrice = this.build.additionalLineItems[index].price;
+        await Cloud.addUpdateQuoteItem.with({
+          buildID: this.build.id,
+          quoteLineItemID: addlItemID,
+          price: newPrice });
 
-      await Cloud.updateQuotePrice.with({buildPartId: bPartDBID, price:newPrice});
+      }
+      
+
+      
       
     },
 
@@ -110,8 +129,7 @@ parasails.registerPage('quote', {
       //ping the DB for a new quoteLineItem ID
       var newQuoteLineItemID =  await Cloud.addUpdateQuoteItem.with({buildID: this.build.id});
       this.build.additionalLineItems.push({id : newQuoteLineItemID, price: 0, vuPrice:"0"});
-      //add to quoteLineItems therefore increasing the number of extra line item forms on the page
-      //this.quoteLineItems.push({id: newQuoteLineItemID, partCode: undefined, friendlyName: undefined, partDescription: undefined});
+     
     },
 
     deleteQuoteLineItem: async function(itemID, itemIndex){
@@ -128,7 +146,7 @@ parasails.registerPage('quote', {
       var partCode = this.build.additionalLineItems[itemIndex].partCode;
       var friendlyName = this.build.additionalLineItems[itemIndex].friendlyName;
       var partDescription = this.build.additionalLineItems[itemIndex].partDescription;
-      var price = this.build.additionalLineItems[itemIndex].vuPrice;
+     
 
       await Cloud.addUpdateQuoteItem.with({
         buildID: buildID,
@@ -136,7 +154,7 @@ parasails.registerPage('quote', {
         partCode: partCode,
         friendlyName: friendlyName,
         partDescription: partDescription,
-        price: price,
+     
         });
       
     }
