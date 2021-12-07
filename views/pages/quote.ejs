@@ -94,7 +94,9 @@
 
           <div class="row">
             <div class="col">
+              <button @click="downloadPDF()">generate pdf</button>
               <a :href="'/quote-pdf/'+build.sessionCode+'/'+build.createdAt">GO TO PDF</a>
+              <a :href="'/screenShots/'+build.sessionCode+'.pdf'" download>Download pdf</a>
             </div>
           </div>
 

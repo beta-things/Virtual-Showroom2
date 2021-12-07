@@ -91,5 +91,6 @@ module.exports.routes = {
   'POST /api/v1/upload-screenshot': { action: 'upload-screenshot' },
   'PATCH /api/v1/update-quote-price': { action: 'update-quote-price' },
   'POST /api/v1/add-update-quote-item': { action: 'add-update-quote-item' },
+  'POST /api/v1/generate-pdf': { action: 'generate-pdf' },
   
 };

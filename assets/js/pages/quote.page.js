@@ -157,6 +157,12 @@ parasails.registerPage('quote', {
      
         });
       
+    },
+
+    downloadPDF: async function(){
+      console.log("awaiting PDF");
+      await Cloud.generatePdf.with({sessionCode: this.build.sessionCode , buildSecret: this.build.createdAt });
+      console.log("PDF MADE");
     }
 
   }
