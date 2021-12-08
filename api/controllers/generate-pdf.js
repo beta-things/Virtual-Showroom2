@@ -39,7 +39,9 @@ module.exports = {
       format: 'letter',
     };
 
-    await page.goto('http://localhost:1337/quote-pdf/'+inputs.sessionCode+'/'+inputs.buildSecret);
+    var scrapePage = sails.config.custom.baseUrl;
+
+    await page.goto(scrapePage+inputs.sessionCode+'/'+inputs.buildSecret);
     await page.pdf(options);
 
 
