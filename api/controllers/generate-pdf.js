@@ -43,6 +43,7 @@ module.exports = {
 
     await page.goto(scrapePage+'/quote-pdf/'+inputs.sessionCode+'/'+inputs.buildSecret);
     await page.pdf(options);
+    await browser.close();
 
 
     // All done.
