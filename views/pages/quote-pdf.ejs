@@ -7,7 +7,7 @@
         <img src="/images/LOGO-STANDARD.png" style="width:100%;" />
       </div>
       <div class="col-8 d-flex flex-column justify-content-center">
-        <h1 class="text-center" >OFFER SHEET ({{build.buildName}})</h1> 
+        <h1 class="text-center" >Offer Sheet ({{build.buildName}})</h1> 
         <h5 class="text-center" >View in 3D: <a class="text-deco-none" :href="baseUrl+'showroom/'+build.sessionCode+'/'+build.owner.id" target="_blank" >{{baseUrl}}showroom/{{build.sessionCode}}/{{build.owner.id}}</a></h5> 
       </div>
       <div class="col-2">
@@ -17,17 +17,18 @@
 
     <div class="row mb-3 pb-3 q-header">
       
-      <div class="col-3 d-flex flex-column justify-content-center">
+      <div class="col-4 d-flex flex-column justify-content-center">
         <h5>Contact:</h5>
         <h3>{{salesAgent.fullName}}</h3>
         <h3>{{salesAgent.emailAddress}}</h3>
         <h3>1+(604)-985-2248</h3>
       </div>
-      <div class="col-6">
+
+      <div class="col-4">
         
       </div>
 
-      <div class="col-3 d-flex flex-column justify-content-center text-right">
+      <div class="col-4 d-flex flex-column justify-content-center text-right">
         <h5>Customer:</h5>
         <h3>{{build.owner.companyName}}</h3>
         <h3>{{build.owner.contactName}}</h3>
@@ -54,20 +55,20 @@
           <div class="row mt-2" v-for="(bPart, index) in build.buildParts" :key="index" style="border-bottom: 1px solid grey;">
            
             <div class="col-2">
-            <h3 class="text-center">{{bPart.partInfo.partCode}}</h3>
+            <h3 class="text-center big-text">{{bPart.partInfo.partCode}}</h3>
            </div>
 
             <div class="col-6">
-              <div>
-                <h4 class="text-center" >{{bPart.partInfo.friendlyName}}</h4>
+              <div class="text-center">
+                <h4 class="text-center big-text" >{{bPart.partInfo.friendlyName}}</h4>
                 <p>{{bPart.partInfo.partDescription}}</p> 
               </div>
             </div>
 
-            <div class="col-4">
+            <div class="col-4 d-flex flex-column justify-content-center">
               <div class="row">
                 <div class="col-2 dollar-sign">$</div>
-                <div class="col-10 price-field">{{build.buildParts[index].vuPrice}}</div>    
+                <div class="col-10 big-thin-text">{{build.buildParts[index].vuPrice}}</div>    
               </div>
             </div>
             
@@ -82,16 +83,16 @@
                 </div>
       
                   <div class="col-6">
-                    <div>
-                      <h4 class="text-center" >{{qItem.friendlyName}}</h4>
+                    <div class="text-center">
+                      <h4 class="text-center big-text" >{{qItem.friendlyName}}</h4>
                       <p>{{qItem.partDescription}}</p> 
                     </div>
                   </div>
       
-                  <div class="col-4">
+                  <div class="col-4 d-flex flex-column justify-content-center">
                     <div class="row mb-3">
                       <div class="col-2 dollar-sign">$</div>
-                      <div class="col-10 price-field">{{build.additionalLineItems[index].vuPrice}}</div>   
+                      <div class="col-10 big-thin-text">{{build.additionalLineItems[index].vuPrice}}</div>   
                     </div>
                     
                   </div>
@@ -111,7 +112,7 @@
               <div class="row">
                 <div class="col-2 dollar-sign">$</div>
                 <div class="col-10 ">
-                  <div class="price-field" type="text">
+                  <div class="big-text" type="text">
                     {{priceTotal}}
                   </div>
                 </div> 

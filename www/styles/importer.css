@@ -1248,11 +1248,16 @@ label {
   background-color: white;
   color: black;
 }
-#quote-pdf .price-field {
+#quote-pdf .big-text {
   width: 100%;
   font-size: x-large;
   font-weight: 700;
-  text-align: left;
+  color: black;
+}
+#quote-pdf .big-thin-text {
+  width: 100%;
+  font-size: x-large;
+  font-weight: 400;
   color: black;
 }
 #quote-pdf .code-field {
@@ -1263,12 +1268,12 @@ label {
   color: black;
 }
 #quote-pdf .dollar-sign {
-  font-size: x-large;
-  font-weight: 700;
+  font-size: medium;
+  font-weight: 400;
   text-align: right;
   position: relative;
-  right: -18px;
-  bottom: -3px;
+  right: -29px;
+  bottom: 3px;
 }
 #quote-pdf #notes-field {
   width: 100%;
