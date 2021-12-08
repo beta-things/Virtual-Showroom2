@@ -32,7 +32,7 @@ module.exports = {
       var saveFolder = '.tmp/public/screenShots/';
     }
     
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
     const page = await browser.newPage();
     const options = {
       path: saveFolder+inputs.sessionCode+'.pdf',
