@@ -41,7 +41,7 @@ module.exports = {
 
     var scrapePage = sails.config.custom.baseUrl;
 
-    await page.goto(scrapePage+'/'+inputs.sessionCode+'/'+inputs.buildSecret);
+    await page.goto(scrapePage+'/quote-pdf/'+inputs.sessionCode+'/'+inputs.buildSecret);
     await page.pdf(options);
 
 
