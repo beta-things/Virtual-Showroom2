@@ -40,7 +40,7 @@ module.exports = {
     //add part info to build parts object
     for(i=0; i<build.buildParts.length; i++){
       var partID = build.buildParts[i].part;
-      var partInfo = await Parts.findOne({id:partID });
+      var partInfo = await Parts.findOne({id:partID }).populate('aliasTrunks');
       build.buildParts[i].partInfo = partInfo; 
     }
 
@@ -53,30 +53,36 @@ module.exports = {
        var foundSlot = await Slot.findOne({id : templateWithSlots.slots[i].id}).populate('posOffObserve');
        templateWithSlots.slots[i].posOffObserve = foundSlot.posOffObserve;
 
-
       var ownerSlotId = templateWithSlots.slots[i].id;
       //adding in the parts for each slot
       var slotParts = await Parts.find({owner:ownerSlotId});
       //for each part in slot
       for(var v=0; v<slotParts.length; v++){
-        //is the part an aliace or does it have aliaces
-
-        //case: this part is an aliace
+        
+        //is the part an alias
         if(slotParts[v].isAliasPart){
-          //build has part ID
-          var whenBuildHasPartID = slotParts[v].hasPartID;
-          //which part is this an aliace of?
-          var aliaceOfPartID = slotParts[v].aliasOfPartID;
+          //get all the alias trunks for this part
+          var aliasTrunks = await AliasTrunks.find({owner : slotParts[v].id });
+          //loop through the alias trunks to see if any take effect. 
+          var trunkHits = 0;
+          for(var t=0; t<aliasTrunks.length; t++){
+            var aliaceOfPartID = slotParts[v].aliasOfPartID; //which part is this an aliace of?
+            var whenBuildHasPartID = aliasTrunks[t].hasPartID; //build has part ID
+            //are conditions met that this aliace part is available for use to select? 
+            //find any matches between build part ids and any of the alias trunk hasPartIDs
+            if( _.find(build.buildParts, {part: whenBuildHasPartID}) ){
+              trunkHits +=1;
+              sails.log("found truhnk match");
+            }
+          }
 
-          //are conditions met that this aliace part is available for use to select? 
-          //Does build have the 'use when' part ID. Requires check of build.buildParts 
-          if( _.find(build.buildParts, {part: whenBuildHasPartID}) ){
-            //set aliace's original part to NOT display
-            var notDisplayedIndex = _.findIndex(slotParts, { 'id': aliaceOfPartID });
-            slotParts[notDisplayedIndex].doNotDisplay = true;
-          }else{//set this part to not display
+          if(trunkHits>0){//if matches found, then doNotDisplay this part's originator
+            var originatorPartIndex = _.findIndex(slotParts, { 'id': aliaceOfPartID });
+            slotParts[originatorPartIndex].doNotDisplay = true;
+          }else{//else do not display this part
             slotParts[v].doNotDisplay = true;
           }
+           
         }
    
           //if part exists in buildparts, set the active flag
