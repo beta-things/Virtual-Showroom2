@@ -28,6 +28,7 @@ parasails.registerPage('edit-parts', {
 
     editPartAtSlot: [],
     editPartAtSlotID: [],
+    viewTrunksAtSlot:[],
 
   },
 
@@ -158,6 +159,8 @@ parasails.registerPage('edit-parts', {
     },
 
     addAliasTrunk: async function(slotIndex){
+      this.showTrunksAtSlot(slotIndex);
+
       var trunkWhenSlot = {
         id : this.useAliasWhenSlot[slotIndex].id,//equates to a slot id
         slotName : this.useAliasWhenSlot[slotIndex].slotName,
@@ -193,7 +196,18 @@ parasails.registerPage('edit-parts', {
       this.aliasOfPartID[slotIndex] = undefined;
       this.useAliasWhenSlot[slotIndex] = undefined;
       this.whenSlotHasPartID[slotIndex] = undefined;
+    },
+
+    showTrunksAtSlot: function(slotIndex){
+      this.viewTrunksAtSlot[slotIndex] = true;
+      this.$forceUpdate();
+    },
+
+    hideTrunksAtSlot: function(slotIndex){
+      this.viewTrunksAtSlot[slotIndex] = false;
+      this.$forceUpdate();
     }
+
   }
 });
  

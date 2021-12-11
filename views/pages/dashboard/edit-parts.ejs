@@ -188,10 +188,14 @@
                     </div>
 
                   </div>
-
-                  <ajax-button v-if="(slotIndex>0)" @click="addAliasTrunk(slotIndex)" class="btn btn-success" > Add Alias Trunk</ajax-button>
                   
-                  <div class="new-trunk" v-for="(trunk, trunkIndex) in partAliasTrunks[slotIndex]">
+                  <div v-if="(slotIndex>0)">
+                    <ajax-button @click="addAliasTrunk(slotIndex)" class="btn btn-success" >Add Alias Trunk</ajax-button>
+                    <ajax-button v-if="!viewTrunksAtSlot[slotIndex]" @click="showTrunksAtSlot(slotIndex)" class="btn btn-primary" > Show Trunks</ajax-button>
+                    <ajax-button v-if="viewTrunksAtSlot[slotIndex]" @click="hideTrunksAtSlot(slotIndex)" class="btn btn-warning" > Hide Trunks</ajax-button>
+                  </div>
+
+                  <div v-if="viewTrunksAtSlot[slotIndex]" class="new-trunk" v-for="(trunk, trunkIndex) in partAliasTrunks[slotIndex]">
                     <h5 class="text-center">ALIAS TRUNK # {{trunkIndex+1}}</h5>
                     <div><div>Slot ID: {{trunk.slot.id}} </div><div>Slot Name: {{trunk.slot.slotName}}</div></div>
                     <div><div>Has Part ID: {{trunk.part.id}} </div><div>Has Part: {{trunk.part.friendlyName}}</div></div>
