@@ -1,13 +1,23 @@
 module.exports = {
 
 
-  friendlyName: 'Add part to slot',
+  friendlyName: 'Add part to slot or update',
 
 
   description: 'for admin to add a part to the pool of selectable parts for a given slot id',
 
 
   inputs: {
+
+    update:{
+      type: "boolean",
+      defaultsTo: false,
+    },
+
+    updatePartID: {
+      type: "number",
+
+    },
 
     friendlyName:{
       type: "string",
@@ -43,13 +53,9 @@ module.exports = {
       type:"number",
       defaultsTo: undefined,
     },
-    aliasWhenSlotID:{
-      type:"number",
-      defaultsTo: undefined,
-    },
-    hasPartID:{
-      type:"number",
-      defaultsTo: undefined,
+    aliasTrunks:{
+      type: "json", //is an array of objects
+      defaultsTo: undefined
     },
     downstreamXOffset:{
       type: "number",
@@ -63,13 +69,7 @@ module.exports = {
       type: "number",
       defaultsTo: 0
     },
-    hasPreReq:{
-      type: "boolean",
-      defaultsTo: false
-    },
-    preReqPartID:{
-      type: "number",
-    }
+
 
   },
 
@@ -80,29 +80,89 @@ module.exports = {
 
 
   fn: async function (inputs) {
-    var newRecord = await Parts.create({
-      friendlyName : inputs.friendlyName, 
-      meshName : inputs.meshName,  
-      isAliasPart : inputs.isAliasPart,
-      aliasRefName: inputs.aliasRefName,
-      aliasOfPartID:inputs.aliasOfPartID, 
-      aliasWhenSlotID: inputs.aliasWhenSlotID,
-      hasPartID:inputs.hasPartID,
-      downstreamXOffset : inputs.downstreamXOffset,
-      downstreamYOffset : inputs.downstreamYOffset,
-      downstreamZOffset : inputs.downstreamZOffset,
-      owner : inputs.optionForSlotID,
-      partCode: inputs.partCode,
-      partDescription: inputs.partDescription,
-      hasPreReq: inputs.hasPreReq,
-      preReqPartID: inputs.preReqPartID,
-    }).fetch();
 
-    sails.log(newRecord);
+    if(inputs.update){
 
-    var allPartsForSlot = await Parts.find({owner:inputs.optionForSlotID});
+      await Parts.update({id:inputs.updatePartID}).set({
+        friendlyName : inputs.friendlyName, 
+        meshName : inputs.meshName,  
+        isAliasPart : inputs.isAliasPart,
+        aliasRefName: inputs.aliasRefName,
+        aliasOfPartID:inputs.aliasOfPartID, 
+        downstreamXOffset : inputs.downstreamXOffset,
+        downstreamYOffset : inputs.downstreamYOffset,
+        downstreamZOffset : inputs.downstreamZOffset,
+        owner : inputs.optionForSlotID,
+        partCode: inputs.partCode,
+        partDescription: inputs.partDescription,
+      });
+      //delete existing alias trunks for this part ID
+      await AliasTrunks.destroy({owner:inputs.updatePartID});
+
+      //re-make all the alias trunks
+      for(var i=0; i<inputs.aliasTrunks.length; i++){
+        await AliasTrunks.create({ //make new alias trunk and assign it to the new part
+          aliasWhenSlotID:inputs.aliasTrunks[i].slot.id ,
+          hasPartID: inputs.aliasTrunks[i].part.id,
+          owner: inputs.updatePartID,
+        });
+      }
+
+      var newRecord = {id:inputs.updatePartID};
+      
+    }else{
+
+      var newRecord = await Parts.create({
+        friendlyName : inputs.friendlyName, 
+        meshName : inputs.meshName,  
+        isAliasPart : inputs.isAliasPart,
+        aliasRefName: inputs.aliasRefName,
+        aliasOfPartID:inputs.aliasOfPartID, 
+        downstreamXOffset : inputs.downstreamXOffset,
+        downstreamYOffset : inputs.downstreamYOffset,
+        downstreamZOffset : inputs.downstreamZOffset,
+        owner : inputs.optionForSlotID,
+        partCode: inputs.partCode,
+        partDescription: inputs.partDescription,
+      }).fetch();
+
+      for(var i=0; i<inputs.aliasTrunks.length; i++){
+        await AliasTrunks.create({ //make new alias trunk and assign it to the new part
+          aliasWhenSlotID:inputs.aliasTrunks[i].slot.id ,
+          hasPartID: inputs.aliasTrunks[i].part.id,
+          owner: newRecord.id,
+        });
+      }
+
+    }
+
+
+   
+
+    var allPartsForSlot = await Parts.find({owner:inputs.optionForSlotID}).populate('aliasTrunks');
+   
+    
+    for(p=0; p<allPartsForSlot.length; p++){ //for each part 
+      for(t=0; t<allPartsForSlot[p].aliasTrunks.length; t++){ //for each trunk
+        var trunk = allPartsForSlot[p].aliasTrunks[t];
+        allPartsForSlot[p].aliasTrunks[t].slot = {};
+        allPartsForSlot[p].aliasTrunks[t].slot.id = trunk.aliasWhenSlotID;
+        var slot = await Slot.findOne({id: trunk.aliasWhenSlotID});
+        allPartsForSlot[p].aliasTrunks[t].slot.slotName = slot.slotName;
+
+        allPartsForSlot[p].aliasTrunks[t].part = {};
+        allPartsForSlot[p].aliasTrunks[t].part.id = trunk.hasPartID;
+        var part = await Parts.findOne({id: trunk.hasPartID});
+        allPartsForSlot[p].aliasTrunks[t].part.friendlyName = part.friendlyName;
+      }
+    }
+
+
     // All done.
-    return allPartsForSlot;
+    return {
+        allPartsForSlot: allPartsForSlot ,
+        newPartID: newRecord.id,
+    };
 
   }
 

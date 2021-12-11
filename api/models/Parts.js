@@ -19,7 +19,7 @@ module.exports = {
     },
     partCode:{
       type:"string",
-      defaultsTo: "XXX"
+      defaultsTo: undefined
     },
     partDescription:{
       type: "string",
@@ -42,14 +42,6 @@ module.exports = {
       type:"number",
       defaultsTo: undefined,
     },
-    aliasWhenSlotID:{
-      type:"number",
-      defaultsTo: undefined,
-    },
-    hasPartID:{
-      type:"number",
-      defaultsTo: undefined,
-    },
     downstreamXOffset:{
       type: "number",
       defaultsTo: 0
@@ -62,13 +54,13 @@ module.exports = {
       type: "number",
       defaultsTo: 0
     },
-    hasPreReq:{
+    /*hasPreReq:{
       type: "boolean",
       defaultsTo: false
     },
     preReqPartID:{
       type: "number",
-    },
+    },*/
 
     //  ╔═╗╔╦╗╔╗ ╔═╗╔╦╗╔═╗
     //  ║╣ ║║║╠╩╗║╣  ║║╚═╗
@@ -80,8 +72,12 @@ module.exports = {
     //  ╩ ╩╚═╝╚═╝╚═╝╚═╝╩╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
     owner:{
       model: "slot",
-      
     },
+    aliasTrunks:{ //where we store entries about which pre-occuring slots in the stack will have their x/y offsets honored by parts in this slot
+      collection: "aliastrunks",
+      via: "owner"
+    }
+    
 
   },
 

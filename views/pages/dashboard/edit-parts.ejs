@@ -137,56 +137,76 @@
                   </div>
                   <!-- PARTS CAN BE ALIAS OF ANY SLOT SIBLING PART -->
                   <div class="row under-buffer" v-if="isAlias[slotIndex]" >
+                   
                     <div class="col-5">
                       <span>alias of part:</span>
                     </div>
+                   
                     <div class="col-7">
+                     
                       <select v-model="aliasOfPartID[slotIndex]">
                         <option disabled value="">Please select one</option>
                         <option v-for="(slotSiblingPart, slotSiblingIndex) in templatesList[selectedTemplateIndex].slots[slotIndex].parts" v-bind:key="slotSiblingIndex" v-bind:value="slotSiblingPart.id" >{{slotSiblingPart.friendlyName}}</option>
-                        
                       </select>
-                      <span>{{aliasOfPartID[slotIndex]}}</span>
+
                     </div>
+
                   </div>
+
                   <!--ALIAS WILL BE SUBSTITUTED WHEN A SLOT FURTHER DOWN THE STACK...-->
                   <div class="row under-buffer" v-if="isAlias[slotIndex]" >
+                    
                     <div class="col-5">
                       <span>used if:</span>
                     </div>
+
                     <div class="col-7">
-                      <select v-model="useAliasWhenSlot[slotIndex]" @change="updateUsedIfSlot(useAliasWhenSlot[slotIndex])">
+
+                      <select v-model="useAliasWhenSlot[slotIndex]" @change="updateUsedIfSlot(useAliasWhenSlot[slotIndex].id)">
                         <option disabled value="">Please select one</option>
-                        <option v-for="(aliasWhenSlot, aliasWhenSlotIndex) in templatesList[selectedTemplateIndex].slots" v-if="(aliasWhenSlotIndex<slotIndex)" v-bind:key="aliasWhenSlotIndex" v-bind:value="aliasWhenSlot.id" >{{aliasWhenSlot.slotName}}</option>
-                        
+                        <option v-for="(aliasWhenSlot, aliasWhenSlotIndex) in templatesList[selectedTemplateIndex].slots" v-if="(aliasWhenSlotIndex<slotIndex)" v-bind:key="aliasWhenSlotIndex" v-bind:value="{id : aliasWhenSlot.id, slotName : aliasWhenSlot.slotName}" >{{aliasWhenSlot.slotName}}</option>
                       </select>
-                      <span>{{useAliasWhenSlot[slotIndex]}}</span>
+
                     </div>
+
                   </div>
 
                   <!--...HAS ACTIVE PART WITH ID-->
                   <div class="row under-buffer" v-if="(useAliasWhenSlot[slotIndex]!=undefined)" >
+                   
                     <div class="col-5">
                       <span>has part:</span>
                     </div>
+
                     <div class="col-7">
+
                       <select v-model="whenSlotHasPartID[slotIndex]" >
                         <option disabled value="">Please select one</option>
-                        <option v-for="(refSlotPart, refSlotPartIndex) in templatesList[selectedTemplateIndex].slots[AliasPartSlotIndex].parts" v-bind:key="refSlotPartIndex" v-bind:value="refSlotPart.id" >{{refSlotPart.friendlyName}}</option>
-                        
+                        <option v-for="(refSlotPart, refSlotPartIndex) in templatesList[selectedTemplateIndex].slots[AliasPartSlotIndex].parts" v-bind:key="refSlotPartIndex" v-bind:value="{id : refSlotPart.id, friendlyName : refSlotPart.friendlyName}" >{{refSlotPart.friendlyName}}</option>
                       </select>
-                      <span>{{whenSlotHasPartID[slotIndex]}}</span>
+                     
                     </div>
+
                   </div>
 
-
-
+                  <ajax-button v-if="(slotIndex>0)" @click="addAliasTrunk(slotIndex)" class="btn btn-success" > Add Alias Trunk</ajax-button>
+                  
+                  <div class="new-trunk" v-for="(trunk, trunkIndex) in partAliasTrunks[slotIndex]">
+                    <h5 class="text-center">ALIAS TRUNK # {{trunkIndex+1}}</h5>
+                    <div><div>Slot ID: {{trunk.slot.id}} </div><div>Slot Name: {{trunk.slot.slotName}}</div></div>
+                    <div><div>Has Part ID: {{trunk.part.id}} </div><div>Has Part: {{trunk.part.friendlyName}}</div></div>
+                  </div>
+                  
                 </div>
               </div>
               
               <div class="row under-buffer">
-                <div class="col">
+                <div v-if="!editPartAtSlot[slotIndex]" class="col">
                   <button class="btn btn-success wide-submit" @click="createPart(slotIndex)">Add Part</button>
+                </div>
+                <div v-else class="col">
+                  <button class="btn btn-danger wide-submit" @click="cancelEdit(slotIndex)">CANCEL EDIT</button>
+                  <button class="btn btn-success wide-submit" @click="saveEdit(slotIndex, editPartAtSlotID[slotIndex])">SAVE EDIT</button>
                 </div>
                             
               </div>
@@ -205,8 +225,7 @@
                       <th>Is Alias</th>
                       <th>Alias Ref.</th>
                       <th>Alias of</th>
-                      <th>Alias when</th>
-                      <th>Has part</th>
+                      <th></th>
                       <th></th>
                     </tr>
                     <tr v-for="(displayPart, displayPartIndex) in templatesList[selectedTemplateIndex].slots[slotIndex].parts">
@@ -219,9 +238,8 @@
                       <td>{{displayPart.isAliasPart}}</td>
                       <td v-if="displayPart.isAliasPart">{{displayPart.aliasRefName}}</td> <td v-else>N/A</td>
                       <td v-if="displayPart.isAliasPart">{{displayPart.aliasOfPartID}}</td> <td v-else>N/A</td>
-                      <td v-if="displayPart.isAliasPart">{{displayPart.aliasWhenSlotID}}</td> <td v-else>N/A</td>
-                      <td v-if="displayPart.isAliasPart">{{displayPart.hasPartID}}</td> <td v-else>N/A</td>
-                      <td><button class="btn btn-danger" @click="deletePart(displayPart.id, slotIndex)">Delete</button> </td>
+                      <td><button class="btn btn-danger" @click="deletePart(displayPart.id, slotIndex)">DELETE</button> </td>
+                      <td><button class="btn btn-warning" @click="editPart(displayPartIndex, slotIndex)">EDIT</button></td>
                     </tr>
 
                     
@@ -229,12 +247,6 @@
 
                 </div>
   
-              </div>
-
-              <div class="row" v-for="(displayPart, displayPartIndex) in templatesList[selectedTemplateIndex].slots[slotIndex].parts">
-                <div class="col">
-                  
-                </div>
               </div>
                   
             </div>
