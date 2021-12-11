@@ -1191,6 +1191,17 @@ label {
 #edit-parts .wide-submit {
   width: 100%;
 }
+#edit-parts .new-trunk {
+  background-color: #cecece;
+  margin: 10px;
+  padding: 8px;
+  border-radius: 15px;
+}
+#edit-parts .new-trunk div {
+  background-color: #f9ffff;
+  color: black;
+  margin: 10px;
+}
 #quote .bottom-bumper {
   margin-bottom: 15px;
 }
