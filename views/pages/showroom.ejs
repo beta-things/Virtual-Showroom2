@@ -20,7 +20,7 @@
                             <div class="switch-field bottom-bumper" >
                                 <div>
                                     <input type="radio" :id="'none-'+slot.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" value="none" />
-                                    <label @click="callRemovePart(slotIndex, selectedPartForSlot[slotIndex])" :for="'none-'+slot.id">None</label>
+                                    <label @click="callRemovePart(slotIndex, selectedPartForSlot[slotIndex], slot.id)" :for="'none-'+slot.id">None</label>
                                 </div>
 
                                 <div v-for="(part, partIndex) in slot.parts" v-if="!part.doNotDisplay">

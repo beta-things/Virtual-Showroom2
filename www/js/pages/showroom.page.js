@@ -78,18 +78,19 @@ parasails.registerPage('showroom', {
     //set socket hook build parts change
     io.socket.on('build-parts-change', async (data) =>{
       //if this is a response for a part delete call
+      var slotsToClear = data.clearSlotList.reverse();
       if(data.deleted){
         //go through every slot above the one being removed, and remove them if not empty
-        await removePart(data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene);
-        this.partIsLoading[data.slotIndex] = false;
+        await removePart(slotsToClear, data.slotIndex, this.stagedProduct, this.scene);
+        this.partIsLoading[data.slotIndex] = false; //stop spinner
       }else{
         var slotContent = _.find(this.build.buildParts, {slot:data.slotID});
         if(slotContent){//do we already have something in that slot?
-          await swapPart(data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//yes: do a swap
-          this.partIsLoading[data.slotIndex] = false; 
+          await swapPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//yes: do a swap
+          this.partIsLoading[data.slotIndex] = false; //stop spinner
         }else{
-          await addPart(data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//no: just add it
-          this.partIsLoading[data.slotIndex] = false; 
+          await addPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//no: just add it
+          this.partIsLoading[data.slotIndex] = false; //stop spinner
         }
         
         
@@ -182,8 +183,10 @@ parasails.registerPage('showroom', {
       constructPartsArray(this.templateWithSlots, this.allParts);
 
       //kinda messy, but the stager also returns the mirror object
-			this.mirrorOBJ = await stageMeshItems(this.scene, this.allParts, this.stagedProduct); //fills the staged object and amalgamates object's children animations
-				
+      var stagedResult = await stageMeshItems(this.scene, this.allParts, this.stagedProduct); //fills the staged object and amalgamates object's children animations
+      this.mirrorOBJ = stagedResult.mirrorOBJ;
+      this.stagedProduct = stagedResult.stagedProduct;
+
       //this.scene.debugLayer.show();
 
     },
@@ -216,7 +219,7 @@ parasails.registerPage('showroom', {
 
     },
 
-    callRemovePart: function(slotIndex, offstageID){
+    callRemovePart: function(slotIndex, offstageID, slotID){
       this.partIsLoading[slotIndex] = true;
       io.socket.get('/api/v1/build-parts-update', {
         buildID: this.build.id, 
@@ -224,8 +227,9 @@ parasails.registerPage('showroom', {
         slotIndex: slotIndex,
         offstageIndex: offstageID,
         delete: true,
-     
+        slotID: slotID,
       });
+      
     },
 
     updateNotes: function(){

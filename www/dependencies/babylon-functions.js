@@ -113,7 +113,6 @@ var generateFlatMirror = function(MIRRORMESH, others, scene){
 	for (var index = 0; index < others.length; index++) {
 		if(others[index].name.includes('primitive')){
 			MIRRORMESH.material.reflectionTexture.renderList.push(others[index]);
-			console.log("using mesh "+ others[index]);
 		}
 	}
 
@@ -133,7 +132,6 @@ var regenerateFlatMirror = function(MIRRORMESH, mirrorPlane){
 	glassNormal = new BABYLON.Vector3.TransformNormal(glassNormal, glass_worldMatrix);
 	// Get a normal vector from the mesh and invert it to create the mirror plane.
 	MIRRORMESH.material.reflectionTexture.mirrorPlane = BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
-	console.log("finished world matrix refresh abstracted");
 }
 
 var getAllMeshChildren = function(parentMesh){
@@ -167,9 +165,6 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 
 		if(stagingParts.onstage[t].name != "place-holder"){
 
-			console.log("we have obs offset in mesh stager");
-			console.log(stagingParts.onstage[t].offsetObservances);
-
 			var foundTopLevelMesh = scene.getNodeByName(stagingParts.onstage[t].name);
 
 			if(!foundTopLevelMesh){
@@ -186,11 +181,9 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 					//check for special case MIRROR OR MIRRORED and add special material
 					//uses aMesh.id for blender name
 					if(aMesh.id == "MIRROR"){
-						console.log("!!!WE GOT A MIRROR!!!");
 						MIRROR = aMesh;
 					}
 					if(aMesh.name.includes("MIRRORED")){
-						console.log("ADDED MIRRORED CALLED"+aMesh.id);
 						MIRROREDS.push(aMesh);
 					}
 
@@ -232,7 +225,6 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 					yOffTally += stagingParts.onstage[offsetObservances[obs].stackPosition].yOff;
 				}
 			
-				
 			}
 
 			foundTopLevelMesh.position.x = xOffTally;
@@ -270,11 +262,9 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 						var childMesh = allChildMeshes[x];
 
 						if(childMesh.id == "MIRROR"){
-							console.log("!!!WE GOT A MIRROR!!!");
 							MIRROR = childMesh;
 						}
 						if(childMesh.name.includes("MIRRORED")){
-							console.log("ADDED MIRRORED CALLED"+childMesh.id);
 							MIRROREDS.push(childMesh);
 						}
 
@@ -320,7 +310,10 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 	// MIRROR STUFF
 	var mirrorOBJ = generateFlatMirror(MIRROR, MIRROREDS, scene);
 	
-	return mirrorOBJ;
+	return {
+		mirrorOBJ : mirrorOBJ,
+		stagedProduct: staged,
+	};
 			
 }
 
@@ -382,30 +375,35 @@ var getAnimatableGroupCurrentFrame = function(animatable){
 	return animatable.getAnimations()[0].currentFrame;
 }
 
-var addPart = async function(stackPosition, offstageID, staged, scene, mirrorOBJ){
+var theADD = async function(staged, stackPosition, offstageID, scene, mirrorOBJ){
+	return new Promise (resolve => {
+		var replacing = staged.offstage[stackPosition][offstageID]; 
+		//for rapid clicking, the staged element needs to update before animations finish.
+		staged.onstage[stackPosition] = replacing;
+		staged.offstage[stackPosition][offstageID] = null;
 
-	var theADD = async function(staged){
-		return new Promise (resolve => {
-			var replacing = staged.offstage[stackPosition][offstageID]; 
-			//for rapid clicking, the staged element needs to update before animations finish.
-			staged.onstage[stackPosition] = replacing;
-			staged.offstage[stackPosition][offstageID] = null;
+		replacing.part.animations.push(zSlideL);
+		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
-			replacing.part.animations.push(zSlideL);
-			scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
-
-				
-				replacing.animGroup.start(false, -1, 2, 0, false);
-				replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
-					regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
-					resolve('resolved');
-				});
+			replacing.animGroup.start(false, -1, 2, 0, false);
+			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
+				regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
+				resolve('resolved');
 			});
 		});
-	}
-	
+	});
+}
+
+var addPart = async function(slotsToClear, stackPosition, offstageID, staged, scene, mirrorOBJ){
+
 	// //remove parts in stack positions above selected slot for remove and replace
-	await removePart(stackPosition, offstageID, staged, scene);
+	//check if there are parts in the stack positions who refer to this one for offsets
+	for(i=0; i<slotsToClear.length; i++){
+		var removeSlotIndex = slotsToClear[i];
+		if( staged.onstage[removeSlotIndex] ){//so long as there is a part in the slot
+			staged = await theRemove(i, staged.onstage[removeSlotIndex].offstageID, staged, scene);
+		}
+	}	
 
 	var xOffTally = 0;
 	var yOffTally = 0;
@@ -437,23 +435,26 @@ var addPart = async function(stackPosition, offstageID, staged, scene, mirrorOBJ
 	
 
 
-	await theADD(staged);
+	await theADD(staged, stackPosition, offstageID, scene, mirrorOBJ);
 	return true;
 
 }
 
 
-var swapPart = async function(stackPosition, offstageID, staged, scene, mirrorOBJ){
+var swapPart = async function(slotsToClear, stackPosition, offstageID, staged, scene, mirrorOBJ){
+	
 	if(staged.onstage[stackPosition].offstageID != offstageID){//if the part we're calling has the same offstage id as the one thats there, do nothing
-		//remove parts in stack positions above selected slot for remove and replace
-		for(i=staged.onstage.length; i>=stackPosition; i--){
-			if(staged.onstage[i]){//so long as there is a part in the slot
-				await theRemove(i, staged.onstage[i].offstageID, staged, scene);
+		//check if there are parts in the stack positions who refer to this one for offsets
+		for(i=0; i<slotsToClear.length; i++){
+			var removeSlotIndex = slotsToClear[i];
+			if( staged.onstage[removeSlotIndex] ){//so long as there is a part in the slot
+				await theRemove(removeSlotIndex, staged.onstage[removeSlotIndex].offstageID, staged, scene);
 			}
-		}
-		//now add the part to be scapped in
-		await addPart(stackPosition, offstageID, staged, scene, mirrorOBJ);
-
+		}	 
+		//finally remove the part that was orriginally called. 
+		await theRemove(stackPosition, staged.onstage[stackPosition].offstageID, staged, scene);
+		//now add the part to be swapped in
+		await addPart([],stackPosition, offstageID, staged, scene, mirrorOBJ);
 	}
 }
 
@@ -461,24 +462,18 @@ var swapPart = async function(stackPosition, offstageID, staged, scene, mirrorOB
 var theRemove = function(stackPosition, offstageID, staged, scene){	
 	
 	return new Promise (resolve => {
-		console.log("welcome to the remove");
+	
 		var removed = staged.onstage[stackPosition];
-		
-		
-		
+
 		removed.animGroup.onAnimationGroupEndObservable.addOnce( async function(){//add callback listener end animation
-			console.log("PART OPENED");
-			
+					
 			staged.onstage[stackPosition]=null; //set the state of the stack position to null 
-			resolve('resolved');
+			staged.offstage[stackPosition][offstageID] = removed; //add the object to the offtage element for later use
+			resolve(staged);
 
 			removed.part.animations.push(zSlideR); // add the z slide right animation to the object 
-			
 			scene.beginDirectAnimation(removed.part , [zSlideR], 0, 2 * frameRate, false, 2, async function(){
-				
-				staged.offstage[stackPosition][offstageID] = removed; //add the object to the offtage element for later use
-				staged.offstage[stackPosition][offstageID].part.setEnabled(false);
-				console.log("remove COMPLETRE");
+				staged.offstage[stackPosition][offstageID].part.setEnabled(false);				
 			});
 
 		});
@@ -491,16 +486,17 @@ var theRemove = function(stackPosition, offstageID, staged, scene){
 
 
 //build an array including the current part and any element above call theRemove for each from the top down
-var removePart = async function(stackPosition, offstageID, staged, scene){
+var removePart = async function(slotsToClear, stackPosition, staged, scene){
 	
-		//check if there are parts in the stack positions above current
-		for(i=staged.onstage.length; i>=stackPosition; i--){
-			if(staged.onstage[i]){//so long as there is a part in the slot
-				await theRemove(i, staged.onstage[i].offstageID, staged, scene);
-			}
+	//check if there are parts in the stack positions who refer to this one for offsets
+	for(i=0; i<slotsToClear.length; i++){
+		var removeSlotIndex = slotsToClear[i];
+		if( staged.onstage[removeSlotIndex] ){//so long as there is a part in the slot
+			await theRemove(removeSlotIndex, staged.onstage[removeSlotIndex].offstageID, staged, scene);
 		}
-		console.log("theRemove has also finished");
-		
+	}	
+	//finally remove the part that was orriginally called. 
+	await theRemove(stackPosition, staged.onstage[stackPosition].offstageID, staged, scene);
 	
 }
 

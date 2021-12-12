@@ -72,7 +72,6 @@ module.exports = {
             //find any matches between build part ids and any of the alias trunk hasPartIDs
             if( _.find(build.buildParts, {part: whenBuildHasPartID}) ){
               trunkHits +=1;
-              sails.log("found truhnk match");
             }
           }
 
