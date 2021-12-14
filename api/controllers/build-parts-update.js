@@ -35,6 +35,10 @@ module.exports = {
     delete:{
       type:"boolean",
       defaultsTo: false,
+    },
+    tourMode:{
+      type: "boolean",
+      defaultsTo: false,
     }
   },
 
@@ -94,6 +98,7 @@ module.exports = {
           slotID: inputs.slotID, 
           offstageIndex: inputs.offstageIndex,
           clearSlotList: clearSlotList,
+          tourMode: inputs.tourMode,
         });
 
       }

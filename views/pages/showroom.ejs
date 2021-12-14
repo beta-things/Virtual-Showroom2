@@ -6,48 +6,71 @@
 
     <div id="right-controls" style="overflow-y: auto;">
         <div class="container-fluid">
-            <div v-if="isLoggedInAgent">  
-               
+            <div v-if="isLoggedInAgent"> 
 
+                <div v-if="!tourMode"><!--build has parts on load EDIT MODE-->
+                    <div class="row bottom-bumper" v-for="(slot, slotIndex) in templateWithSlots.slots" v-bind:key="slotIndex" >
+                        
+                        <div class="col">
+                            <div class="info-bubble full-center-content">
+                                <h4>{{slot.slotName}}</h4>
+                                <span style="padding: 4px; background-color: orange; border-radius: 6px; margin-bottom:4px;" v-if="(slot.nonLineItem)">Non Line Item</span>
 
-                <div class="row bottom-bumper" v-for="(slot, slotIndex) in templateWithSlots.slots" v-bind:key="slotIndex" >
-                    
-                    <div class="col">
-                        <div class="info-bubble full-center-content">
-                            <h4>{{slot.slotName}}</h4>
-                            <span style="padding: 4px; background-color: orange; border-radius: 6px; margin-bottom:4px;" v-if="(slot.nonLineItem)">Non Line Item</span>
-
-                            <div class="switch-field bottom-bumper" >
-                                <div>
-                                    <input type="radio" :id="'none-'+slot.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" value="none" />
-                                    <label @click="callRemovePart(slotIndex, selectedPartForSlot[slotIndex], slot.id)" :for="'none-'+slot.id">None</label>
-                                </div>
-
-                                <div v-for="(part, partIndex) in slot.parts" v-if="!part.doNotDisplay">
-                                    <input  @click="callUpdateBuildPart(slotIndex, partIndex, slot.id)" type="radio" :id="part.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" :value="partIndex" />
-                                    <label  :for="part.id">{{part.friendlyName}}</label>
-                                    
-                                </div>
-                            </div>
-                            <transition name="fade">
-                                <div class="menu-overlay" v-if="partIsLoading[slotIndex]">
+                                <div class="switch-field bottom-bumper" >
                                     <div>
-                                        <img src="/images/part-loading.gif">
-                                        <span style="color:black; opacity: 100%;" >Loading</span>
+                                        <input type="radio" :id="'none-'+slot.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" value="none" />
+                                        <label @click="callRemovePart(slotIndex, selectedPartForSlot[slotIndex], slot.id)" :for="'none-'+slot.id">None</label>
+                                    </div>
+
+                                    <div v-for="(part, partIndex) in slot.parts" v-if="!part.doNotDisplay">
+                                        <input  @click="callUpdateBuildPart(slotIndex, partIndex, slot.id)" type="radio" :id="part.id" :name="slot.id" v-model="selectedPartForSlot[slotIndex]" :value="partIndex" />
+                                        <label  :for="part.id">{{part.friendlyName}}</label>
+                                        
                                     </div>
                                 </div>
-                            </transition>
-                            
+                                <transition name="fade">
+                                    <div class="menu-overlay" v-if="partIsLoading[slotIndex]">
+                                        <div>
+                                            <img src="/images/part-loading.gif">
+                                            <span style="color:black; opacity: 100%;" >Loading</span>
+                                        </div>
+                                    </div>
+                                </transition>
+                                
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <div class="row bottom-bumper">
+                        <div class="col">
+                            <ajax-button :syncing="loadingQuote" @click="makeScreenShot(build.sessionCode)" class="btn-primary btn-block">Go to Quote ></ajax-button>
                         </div>
                     </div>
-                
                 </div>
-                <div class="row bottom-bumper">
+               
+                <div v-else><!--EMPTY BUILD ON LOAD - TOUR MODE-->
+                    
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="full-center-content b-parts-heading bottom-bumper">TOUR MODE</h4>
+                        </div>
+                    </div>
+                    
                     <div class="col">
-                        <ajax-button :syncing="loadingQuote" @click="makeScreenShot(build.sessionCode)" class="btn-primary btn-block">Go to Quote ></ajax-button>
+                        <div class="info-bubble full-center-content mb-3" v-for="(slot, slotIndex) in tourModeSlots" v-bind:key="slotIndex">
+                            
+                            <h4>{{slot.name}}</h4>
+                            <div class="switch-field bottom-bumper" >
+                                <ajax-button @click="callAddPart(slot.index, 0, slot.slotID)" class="btn-primary btn-block">PLAY</ajax-button>
+                            </div>
+                           
+                        </div>
+                        <div class="row">
+                            <ajax-button @click="endTour()" class="btn-primary btn-block">Finish Tour</ajax-button>
+                        </div>
                     </div>
                 </div>
-                
+
             </div>
             <div v-else>
                 
