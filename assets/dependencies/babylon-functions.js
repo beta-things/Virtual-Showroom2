@@ -501,8 +501,9 @@ var removePart = async function(slotsToClear, stackPosition, staged, scene){
 		}
 	}	
 	//finally remove the part that was orriginally called. 
-	await theRemove(stackPosition, staged.onstage[stackPosition].offstageID, staged, scene);
-	
+	if(staged.onstage[stackPosition]){
+		await theRemove(stackPosition, staged.onstage[stackPosition].offstageID, staged, scene);
+	}
 }
 
 

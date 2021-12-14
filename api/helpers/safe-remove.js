@@ -54,9 +54,9 @@ module.exports = {
           if(!clearSlots.includes(currentSlot.stackPosition)){//if clearSlots does not already have this value
             clearSlots.push(currentSlot.stackPosition);//add this stack pos to the front end remove list
             clearSlotsID.push(currentSlot.id);
-            sails.log("adding slot indext to attay");
+            
           }else{
-            sails.log("slot index already in attay");
+            
           }
         }
         
