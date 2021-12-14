@@ -21,6 +21,7 @@ parasails.registerPage('quote-pdf', {
     
     this.pricesToDisplay();
     this.updateTotalPrice();
+    this.build.buildParts.reverse();
 
     var lastEdit = this.build.updatedAt;
     var date = new Date(lastEdit);

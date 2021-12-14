@@ -18,9 +18,11 @@ module.exports = {
 
   fn: async function () {
     //get all templates
-    var templatesList = await Templates.find().populate("slots").sort('createdAt DESC');
+    var templatesList = await Templates.find().sort('createdAt DESC');
     
     for(i=0; i<templatesList.length; i++){//populate each template
+      var dbSlots = await Slot.find({owner: templatesList[i].id}).sort('stackPosition ASC');
+      templatesList[i].slots = dbSlots;
       for(v=0; v<templatesList[i].slots.length; v++){ //populate each slot of the template
         //populate this slot with it's parts
         var slotParts = await Parts.find({owner: templatesList[i].slots[v].id}).populate('aliasTrunks');

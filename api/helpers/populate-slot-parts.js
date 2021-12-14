@@ -27,13 +27,15 @@ module.exports = {
   fn: async function (inputs) {
 
     //GET THE BUILD WITH IT'S BUILD PARTS
-    var build = await Builds.findOne({sessionCode:inputs.sessionCode}).populate('owner').populate('buildParts');
+    var build = await Builds.findOne({sessionCode:inputs.sessionCode}).populate('owner');
+
+    build.buildParts = await Buildparts.find({AssociatedBuild: build.id}).sort('slot ASC');
 
     var customer = await Customers.findOne({id: build.owner.id}).populate('owner');
 
     var salesAgent = customer.owner;
 
-    //needs a way to step through the slots in slot order
+    //step through the build parts in slot order
     //looks like there is no way for the order of slot IDs to be out of sequence with the order of slot positions
     //thus we will default to order by id
 

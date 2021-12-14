@@ -221,11 +221,11 @@
                   <table style="width:100%; background-color: rgb(249, 255, 255);">
                     <tr style="background-color: rgb(206, 206, 206);">
                       <th>ID</th>
+                      <th>Code</th>
                       <th>Display Name</th>
                       <th>Mesh Name</th>
                       <th>X-offset</th>
                       <th>Y-offset</th>
-                      <th>Z-offset</th>
                       <th>Is Alias</th>
                       <th>Alias Ref.</th>
                       <th>Alias of</th>
@@ -234,11 +234,11 @@
                     </tr>
                     <tr v-for="(displayPart, displayPartIndex) in templatesList[selectedTemplateIndex].slots[slotIndex].parts">
                       <td>{{displayPart.id}}</td>
+                      <td>{{displayPart.partCode}}</td>
                       <td>{{displayPart.friendlyName}}</td>
                       <td>{{displayPart.meshName}}</td>
                       <td>{{displayPart.downstreamXOffset}}</td>
                       <td>{{displayPart.downstreamYOffset}}</td>
-                      <td>{{displayPart.downstreamZOffset}}</td>
                       <td>{{displayPart.isAliasPart}}</td>
                       <td v-if="displayPart.isAliasPart">{{displayPart.aliasRefName}}</td> <td v-else>N/A</td>
                       <td v-if="displayPart.isAliasPart">{{displayPart.aliasOfPartID}}</td> <td v-else>N/A</td>

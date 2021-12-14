@@ -253,10 +253,6 @@ parasails.registerPage('showroom', {
       }
     },
 
-    formatPrice: function(formValue){
-      console.log("form value is "+formValue);
-      return "1331.11";
-    },
     makeScreenShot: async function(buildCode){
       this.loadingQuote = true;
 
@@ -270,6 +266,10 @@ parasails.registerPage('showroom', {
       this.camera.radius = 2.75;
 
       this.scene.clearColor = BABYLON.Color3.White();
+
+      //remove the floor 
+      var floor = this.scene.getNodeByName("FLOOR");
+      floor.isVisible = false;
      
       var image = await BABYLON.Tools.CreateScreenshotAsync(this.engine, this.camera, {width:400, height:600});
 
@@ -286,6 +286,9 @@ parasails.registerPage('showroom', {
 
 
     },
+    doGoCamera: function(camNum){
+      goCamera(camNum, this.camera, this.scene);
+    }
     
   }
 });

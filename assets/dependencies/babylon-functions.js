@@ -73,12 +73,17 @@ var addAndSetDefaultCamera = function(scene, camera, canvas){
 }
 
 //SECONDARY CAMERA MAGICK
+var goCamera = function(cameraNumber, camera, scene){
+camera.detachControl();
+camera = scene.getNodeByName("Camera-"+cameraNumber);
 
-// this.camera = this.scene.getNodeByName("B-Camera");
+console.log("FOOUND CAMERA "+camera);
+console.log(camera);
 
-// console.log("FOOUND CAMERA "+this.camera);
+scene.activeCamera = camera;
+}
 
-// this.scene.activeCamera = this.camera;
+
 
 var generateFlatMirror = function(MIRRORMESH, others, scene){
 	// Create, position, and rotate a flat mesh surface.
@@ -401,7 +406,7 @@ var addPart = async function(slotsToClear, stackPosition, offstageID, staged, sc
 	for(i=0; i<slotsToClear.length; i++){
 		var removeSlotIndex = slotsToClear[i];
 		if( staged.onstage[removeSlotIndex] ){//so long as there is a part in the slot
-			staged = await theRemove(i, staged.onstage[removeSlotIndex].offstageID, staged, scene);
+			staged = await theRemove(removeSlotIndex, staged.onstage[removeSlotIndex].offstageID, staged, scene);
 		}
 	}	
 
@@ -516,11 +521,11 @@ var getStackPosAndOffIndex = function(partID, staged){
 	}
 }
 
-var stopAutorotate = function(){
+var stopAutorotate = function(camera){
 	camera.useAutoRotationBehavior = false;
 }
 
-var startAutorotate = function(){
+var startAutorotate = function(camera){
 	camera.useAutoRotationBehavior = true;
 }
 

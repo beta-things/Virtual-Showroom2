@@ -25,6 +25,7 @@ parasails.registerPage('quote', {
     //…
     this.pricesToDisplay();
     this.updateTotalPrice();
+    this.build.buildParts.reverse();
 
   },
 
