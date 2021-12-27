@@ -97,6 +97,7 @@ parasails.registerPage('showroom', {
       var slotsToClear = data.clearSlotList.reverse();
       if(data.deleted){
 
+        this.doGoCamera("Home");
         //go through every slot above the one being removed, and remove them if not empty
         await removePart(slotsToClear, data.slotIndex, this.stagedProduct, this.scene);
         this.partIsLoading[data.slotIndex] = false; //stop spinner
@@ -330,6 +331,7 @@ parasails.registerPage('showroom', {
     doGoCamera: function(slotIndex){ 
       if(slotIndex == "Home"){//home 
         var cameraInfo = this.cameraDefaults;
+        this.tourMode = false;
       }else{
         var tIndex = _.findIndex(this.tourModeSlots, { 'index': slotIndex });
         var cameraInfo = this.tourModeSlots[tIndex];
@@ -343,9 +345,7 @@ parasails.registerPage('showroom', {
       
       //first slot id 
       var zerothSlotID = this.templateWithSlots.slots[0].id;
-      this.doGoCamera("Home");//home position
       this.callRemovePart(0, 0, zerothSlotID);
-      this.tourMode = false;
       startAutorotate(this.camera);
       
   
