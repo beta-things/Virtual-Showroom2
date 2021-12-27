@@ -374,7 +374,13 @@ var theADD = async function(staged, stackPosition, offstageID, scene, mirrorOBJ)
 		staged.onstage[stackPosition] = replacing;
 		staged.offstage[stackPosition][offstageID] = null;
 
+		var easeMode = new BABYLON.QuadraticEase();
+		easeMode.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT);
+
+		zSlideL.setEasingFunction(easeMode);
+
 		replacing.part.animations.push(zSlideL);
+
 		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
 			replacing.animGroup.start(false, -1, 2, 0, false);

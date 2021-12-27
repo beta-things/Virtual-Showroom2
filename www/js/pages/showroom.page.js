@@ -96,8 +96,9 @@ parasails.registerPage('showroom', {
       //if this is a response for a part delete call
       var slotsToClear = data.clearSlotList.reverse();
       if(data.deleted){
-
-        this.doGoCamera("Home");
+        if(this.tourMode){
+          this.doGoCamera("Home");
+        }
         //go through every slot above the one being removed, and remove them if not empty
         await removePart(slotsToClear, data.slotIndex, this.stagedProduct, this.scene);
         this.partIsLoading[data.slotIndex] = false; //stop spinner
