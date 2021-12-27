@@ -28,17 +28,17 @@ parasails.registerPage('showroom', {
     tourMode: true,
 
       //ped 0: FOV: 0.39 ytarg: 0.35 alpha=6.2832 beta = 1.3340 rad= 4.00
-    // pan 1: f=0.41 y = 0.997 al=3.9963 Bet=0.9557 rad = 1.000
+      //pan 1: f=0.41 y = 0.997 al=3.9963 Bet=0.9557 rad = 1.000
       //capsule 2: f=0.2309 y=1.266 al=8.5852 bet = 1.6452 rad= 4
       //prompter mon 3: f =0.2309 y= 1.266 al=6.7214 bet=1.5691 rad 4
 
     tourModeSlots: [
-      {index:0, fov:0.39, targetY: 0.35, alpha:6.2832, beta:1.3340, radius:4.00},
+      {index:0, fov:0.8, targetY: 0.38, alpha:1.8016, beta:1.4414, radius:2.2164},
       {index:1, fov:0.41, targetY: 0.997, alpha:3.996, beta:0.9557, radius:1.00},
       {index:4, fov:0.2309, targetY: 1.266, alpha:8.5852, beta:1.6452, radius:4.00},
       {index:5, fov:0.2309, targetY: 1.266, alpha:6.7214, beta:1.5691, radius:4.00},
     ],
-
+    
     cameraDefaults: {fov:0.8, targetY: 0.75, alpha:1.04, beta:1.80, radius:4.00},
 
   },
@@ -96,19 +96,11 @@ parasails.registerPage('showroom', {
       //if this is a response for a part delete call
       var slotsToClear = data.clearSlotList.reverse();
       if(data.deleted){
-        if(data.tourMode==true){
-          this.camera.fov = this.cameraDefaults.fov;
-          this.camera._target._y = this.cameraDefaults.targetY;
-          this.camera.alpha = this.cameraDefaults.alpha;
-          this.camera.beta = this.cameraDefaults.beta;
-          this.camera.radius = this.cameraDefaults.radius;
-          this.camera.useAutoRotationBehavior = true;
-        }
-
 
         //go through every slot above the one being removed, and remove them if not empty
         await removePart(slotsToClear, data.slotIndex, this.stagedProduct, this.scene);
         this.partIsLoading[data.slotIndex] = false; //stop spinner
+
       }else{
         //if we are in tourMode take conttrol of the camera
         if(data.tourMode==true){
@@ -123,8 +115,7 @@ parasails.registerPage('showroom', {
           await addPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//no: just add it
           this.partIsLoading[data.slotIndex] = false; //stop spinner
         }
-        
-        
+                
       }
       
       //update build obj for VUE rendering
@@ -174,11 +165,11 @@ parasails.registerPage('showroom', {
     // call the createScene function
 
     await this.createScene();
-    // run the render loop
+      // run the render loop
     this.engine.runRenderLoop(() => {
       this.scene.render();
     });
-    
+
     // the canvas/window resize event handler
     window.addEventListener('resize', () => {
       this.engine.resize();
@@ -189,14 +180,18 @@ parasails.registerPage('showroom', {
       console.log('create connection for meeting participants returned:  ' + jwRes.statusCode + ' and data: ', data);
     });
 
+    //SETS TOUR MODE STATUS ON PAGE LOAD
     //check for empty build on load. if empty open the preview interface
     if(this.build.buildParts.length>0){
       this.tourMode=false;
     }else{
       for(i=0; i<this.tourModeSlots.length; i++){
+
         var slotIndex = this.tourModeSlots[i].index;
-        this.tourModeSlots[i].name = this.templateWithSlots.slots[slotIndex].slotName;
-        this.tourModeSlots[i].slotID = this.templateWithSlots.slots[slotIndex].id;
+        if(slotIndex != "H"){//ALL BUT THE HOMING 
+          this.tourModeSlots[i].name = this.templateWithSlots.slots[slotIndex].slotName;
+          this.tourModeSlots[i].slotID = this.templateWithSlots.slots[slotIndex].id;
+        }
       }
       this.$forceUpdate();
     }
@@ -222,7 +217,6 @@ parasails.registerPage('showroom', {
       await importMeshItems(this.scene, this.templateWithSlots.meshFileName);
 
       this.camera = addAndSetDefaultCamera(this.scene, this.camera, this.canvas);
-      console.log(this.camera);
       
       constructPartsArray(this.templateWithSlots, this.allParts);
 
@@ -334,25 +328,32 @@ parasails.registerPage('showroom', {
 
     },
     doGoCamera: function(slotIndex){ 
-      var tIndex = _.findIndex(this.tourModeSlots, { 'index': slotIndex });
-      var cameraInfo = this.tourModeSlots[tIndex];
-      this.camera.fov = cameraInfo.fov;
-      this.camera._target._y = cameraInfo.targetY;
-      this.camera.alpha = cameraInfo.alpha;
-      this.camera.beta = cameraInfo.beta;
-      this.camera.radius = cameraInfo.radius;
-      this.camera.useAutoRotationBehavior = true;
+      if(slotIndex == "Home"){//home 
+        var cameraInfo = this.cameraDefaults;
+      }else{
+        var tIndex = _.findIndex(this.tourModeSlots, { 'index': slotIndex });
+        var cameraInfo = this.tourModeSlots[tIndex];
+      }
+      
+      animateCameraTo(this.camera, this.scene, cameraInfo.alpha, cameraInfo.beta, cameraInfo.radius, cameraInfo.fov, cameraInfo.targetY )
+    
     },
+
     endTour: function(){
       
       //first slot id 
       var zerothSlotID = this.templateWithSlots.slots[0].id;
+      this.doGoCamera("Home");//home position
       this.callRemovePart(0, 0, zerothSlotID);
       this.tourMode = false;
+      startAutorotate(this.camera);
+      
   
     },
+    
+    
 
-    
-    
   }
+
+
 });

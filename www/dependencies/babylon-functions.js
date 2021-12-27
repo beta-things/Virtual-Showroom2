@@ -72,19 +72,6 @@ var addAndSetDefaultCamera = function(scene, camera, canvas){
 
 }
 
-//SECONDARY CAMERA MAGICK
-var goCamera = function(cameraNumber, camera, scene){
-camera.detachControl();
-camera = scene.getNodeByName("Camera-"+cameraNumber);
-
-console.log("FOOUND CAMERA "+camera);
-console.log(camera);
-
-scene.activeCamera = camera;
-}
-
-
-
 var generateFlatMirror = function(MIRRORMESH, others, scene){
 	// Create, position, and rotate a flat mesh surface.
 	var mirrorPlane = BABYLON.MeshBuilder.CreatePlane("mirrorPlane", {width: 1, height: 1}, scene);
@@ -520,6 +507,101 @@ var getStackPosAndOffIndex = function(partID, staged){
 			}
 		}
 	}
+}
+
+var animateCameraTo = function(camera, scene, targetAlpha, targetBeta, targetRadius, targetFOV, targetY){
+	
+	// reseting the alpha and beta to a much simpler version
+	//doesnt move the camera but removes multiples of the full rotation.
+	camera.alpha = camera.alpha % (Math.PI * 2);
+	camera.beta = camera.beta % (Math.PI * 2);
+	targetAlpha = targetAlpha % (Math.PI * 2);
+	targetBeta = targetBeta % (Math.PI * 2);
+
+	if (camera.alpha < 0) {
+		camera.alpha += Math.PI * 2;
+	}
+	if (camera.beta < 0) {
+		camera.beta += Math.PI * 2;
+	}
+	
+	// used to find the shortest curve IE. if angle == 3PI/2 => take the -1PI/2 instead
+	if (Math.abs(camera.alpha - targetAlpha) > Math.PI) {
+		targetAlpha = targetAlpha + (Math.PI * 2);
+	}
+	if (Math.abs(camera.beta - targetBeta) > Math.PI) {
+		targetBeta = targetBeta + (Math.PI * 2);
+	}
+
+	let alphaAnimation = new BABYLON.Animation("camAlpha", "alpha", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+	let betaAnimation = new BABYLON.Animation("camBeta", "beta", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+	let radiusAnimation = new BABYLON.Animation("camRadius", "radius", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+	let fovAnimation = new BABYLON.Animation("camFOV", "fov", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT); 
+	let targetYAnimation = new BABYLON.Animation("camFOV", "_target._y", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT); 
+
+	var easeMode = new BABYLON.QuadraticEase();
+	easeMode.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+
+	alphaAnimation.setEasingFunction(easeMode);
+	betaAnimation.setEasingFunction(easeMode);
+	radiusAnimation.setEasingFunction(easeMode);
+	fovAnimation.setEasingFunction(easeMode);
+	targetYAnimation.setEasingFunction(easeMode);
+
+	var alphaKeys = [{
+		frame : 0,
+		value : camera.alpha
+	}, {
+		frame : 60,
+		value : targetAlpha
+	}];
+
+	var betaKeys = [{
+		frame : 0,
+		value : camera.beta
+	}, {
+		frame : 60,
+		value : targetBeta
+	}];
+
+	var radiusKeys = [{
+		frame : 0,
+		value : camera.radius
+	}, {
+		frame : 60,
+		value : targetRadius
+	}];
+
+	var fovKeys = [{
+		frame : 0,
+		value : camera.fov
+	}, {
+		frame : 60,
+		value : targetFOV
+	}];
+
+	var targetYKeys = [{
+		frame : 0,
+		value : camera._target._y
+	}, {
+		frame : 60,
+		value : targetY
+	}];
+
+	alphaAnimation.setKeys(alphaKeys);
+	betaAnimation.setKeys(betaKeys);
+	radiusAnimation.setKeys(radiusKeys);
+	fovAnimation.setKeys(fovKeys);
+	targetYAnimation.setKeys(targetYKeys);
+
+	camera.animations.push(alphaAnimation);
+	camera.animations.push(betaAnimation);
+	camera.animations.push(radiusAnimation);
+	camera.animations.push(fovAnimation);
+	camera.animations.push(targetYAnimation);
+	
+	scene.beginAnimation(camera, 0, 60, false, 1);
+
 }
 
 var stopAutorotate = function(camera){
