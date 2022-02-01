@@ -35,8 +35,8 @@ parasails.registerPage('showroom', {
     tourModeSlots: [
       {index:0, fov:0.8, targetY: 0.38, alpha:1.8016, beta:1.4414, radius:2.2164},
       {index:1, fov:0.41, targetY: 0.997, alpha:3.996, beta:0.9557, radius:1.00},
-      {index:4, fov:0.2309, targetY: 1.266, alpha:8.5852, beta:1.6452, radius:4.00},
-      {index:5, fov:0.2309, targetY: 1.266, alpha:6.7214, beta:1.5691, radius:4.00},
+      {index:6, fov:0.2309, targetY: 1.266, alpha:8.5852, beta:1.6452, radius:4.00},
+      {index:7, fov:0.2309, targetY: 1.266, alpha:6.7214, beta:1.5691, radius:4.00},
     ],
     
     cameraDefaults: {fov:0.8, targetY: 0.75, alpha:1.04, beta:1.80, radius:4.00},
