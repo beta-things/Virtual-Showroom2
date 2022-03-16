@@ -345,7 +345,7 @@ var addFog = function(scene){
 	scene.fogMode = BABYLON.Scene.FOGMODE_LINEAR;
 	scene.fogStart = 4;
 	scene.fogEnd = 5;
-	scene.fogColor = new BABYLON.Color3.Black();
+	scene.fogColor = new BABYLON.Color3(0,0,0);
 }
 
 var getAnimationGroupForObject = function(meshObject, scene){
