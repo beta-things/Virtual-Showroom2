@@ -54,17 +54,18 @@ var constructPartsArray = function(templateWithSlots, allParts){
 var addAndSetDefaultCamera = function(scene, camera, canvas){
 
 	// Parameters: name, alpha, beta, radius, target position, scene
-	camera = new BABYLON.ArcRotateCamera("ArcRotCamera", 1.04, 1.80, 4, new BABYLON.Vector3(0, 0.75, 0), scene);
+	camera = new BABYLON.ArcRotateCamera("ArcRotCamera", 1.04, 1.80, 5, new BABYLON.Vector3(0, -0.75, 0), scene);
 	camera.attachControl(this.canvas, true);
 	//zoom limits
 	camera.lowerRadiusLimit = 1;
-	camera.upperRadiusLimit = 4;
+	camera.upperRadiusLimit = 5;
 	camera.wheelPrecision = 30;
 	camera.panningSensibility = 0;
 	//clipping
 	camera.maxZ = 20;
 	camera.minZ = 0.1;
 	camera.upperBetaLimit =1.80;
+	camera.lowerBetaLimit =0.9;
 
 	scene.activeCamera = camera;
 
@@ -74,8 +75,9 @@ var addAndSetDefaultCamera = function(scene, camera, canvas){
 
 var generateFlatMirror = function(MIRRORMESH, others, scene){
 	// Create, position, and rotate a flat mesh surface.
-	var mirrorPlane = BABYLON.MeshBuilder.CreatePlane("mirrorPlane", {width: 1, height: 1}, scene);
+	var mirrorPlane = new BABYLON.MeshBuilder.CreatePlane("mirrorPlane", {width: 1, height: 1}, scene);
 	mirrorPlane.position = MIRRORMESH._absolutePosition;
+	//mirrorPlane.position = new BABYLON.Vector3(0.5 , 1.5,0);
 	mirrorPlane.rotation = new BABYLON.Vector3(5.49779, 4.71239, 0); //manually set the mirror plane rotation (45deg & 270deg from initial in radians)
 	//set the mirror plane to be parented by the MIRROR MESH
 	mirrorPlane.setParent(MIRRORMESH);
@@ -85,10 +87,6 @@ var generateFlatMirror = function(MIRRORMESH, others, scene){
 	//Ensure working with new values for mirror plane by computing and obtaining its worldMatrix
 	mirrorPlane.computeWorldMatrix(true);
 	var glass_worldMatrix = mirrorPlane.getWorldMatrix();
-
-	console.log('igen pos');
-	console.log(mirrorPlane.position);
-	
 
 	//Obtain normals for plane and assign one of them as the normal
 	var glass_vertexData = mirrorPlane.getVerticesData("normal");
@@ -101,7 +99,11 @@ var generateFlatMirror = function(MIRRORMESH, others, scene){
 	MIRRORMESH.material.reflectionTexture = new BABYLON.MirrorTexture("mirrorTexture", 2048, scene, true);
 	
 	// Get a normal vector from the mesh and invert it to create the mirror plane.
-	MIRRORMESH.material.reflectionTexture.mirrorPlane = BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	MIRRORMESH.material.reflectionTexture.mirrorPlane = new BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	console.log("mirror normal");
+	console.log(glassNormal.scale(-1));
+	console.log("mirror pos act");
+	console.log(mirrorPlane.position);
 
 	//add items that will be reflected into the renderList
 	for (var index = 0; index < others.length; index++) {
@@ -109,25 +111,29 @@ var generateFlatMirror = function(MIRRORMESH, others, scene){
 			MIRRORMESH.material.reflectionTexture.renderList.push(others[index]);
 		}
 	}
+
 	return {mirrorPlane:mirrorPlane, MIRRORMESH: MIRRORMESH};
 	
 }
 
 var regenerateFlatMirror = function(MIRRORMESH, mirrorPlane){
+	console.log('mir mesh pos');
+	console.log(MIRRORMESH._absolutePosition);
 	//MIRRROR STUFF
 	//Ensure working with new values for mirror plane by computing and obtaining its worldMatrix
 	mirrorPlane.computeWorldMatrix(true);
-
 	var glass_worldMatrix = mirrorPlane.getWorldMatrix();
-	console.log('regen pos');
-	console.log(mirrorPlane.position);
 	//Obtain normals for plane and assign one of them as the normal
 	var glass_vertexData = mirrorPlane.getVerticesData("normal");
 	var glassNormal = new BABYLON.Vector3(glass_vertexData[0], glass_vertexData[1], glass_vertexData[2]);	
 	//Use worldMatrix to transform normal into its current value
 	glassNormal = new BABYLON.Vector3.TransformNormal(glassNormal, glass_worldMatrix);
 	// Get a normal vector from the mesh and invert it to create the mirror plane.
-	MIRRORMESH.material.reflectionTexture.mirrorPlane = BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	MIRRORMESH.material.reflectionTexture.mirrorPlane = new BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	console.log("mirror normal");
+	console.log(glassNormal.scale(-1));
+	console.log("mirror pos act");
+	console.log(mirrorPlane.position);
 	console.log('regen mirror mesh');
 }
 
@@ -175,15 +181,7 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 			//then pull all their tageted animations into the customAnimgroup
 			if(allChildMeshes.length > 0){
 				allChildMeshes.forEach(aMesh => {
-					//check for special case MIRROR OR MIRRORED and add special material
-					//uses aMesh.id for blender name
-					if(aMesh.id == "MIRROR"){
-						MIRROR = aMesh;
-					}
-					if(aMesh.name.includes("MIRRORED")){
-						MIRROREDS.push(aMesh);
-					}
-
+					
 					var childAnimGroup = getAnimationGroupForObject(aMesh, scene);
 					if(childAnimGroup){
 						childAnimGroup._targetedAnimations.forEach(targAnim => {
@@ -229,7 +227,24 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 			
 			xOffTally=0;
 			yOffTally=0;
+
+			///
+
+			//check for special case MIRROR OR MIRRORED and add special material
+			if(allChildMeshes.length > 0){
+				allChildMeshes.forEach(aMesh => {
+					//uses aMesh.id for blender name
+					if(aMesh.id == "MIRROR"){
+						MIRROR = aMesh;
+					}
+					if(aMesh.name.includes("MIRRORED")){
+						MIRROREDS.push(aMesh);
+					}
+				});
+			}
 			
+
+			////
 		}
 	}
 
@@ -305,10 +320,10 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 		}
 	}
 	// MIRROR STUFF
-	var mirrorOBJ = generateFlatMirror(MIRROR, MIRROREDS, scene);
+	//var mirrorOBJ = generateFlatMirror(MIRROR, MIRROREDS, scene);
 	
 	return {
-		mirrorOBJ : mirrorOBJ,
+		//mirrorOBJ : mirrorOBJ,
 		stagedProduct: staged,
 	};
 			
@@ -372,7 +387,7 @@ var getAnimatableGroupCurrentFrame = function(animatable){
 	return animatable.getAnimations()[0].currentFrame;
 }
 
-var theADD = async function(staged, stackPosition, offstageID, scene, mirrorOBJ){
+var theADD = async function(staged, stackPosition, offstageID, scene){
 	return new Promise (resolve => {
 		var replacing = staged.offstage[stackPosition][offstageID]; 
 		//for rapid clicking, the staged element needs to update before animations finish.
@@ -390,14 +405,14 @@ var theADD = async function(staged, stackPosition, offstageID, scene, mirrorOBJ)
 
 			replacing.animGroup.start(false, -1, 2, 0, false);
 			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
-				regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
+				
 				resolve('resolved');
 			});
 		});
 	});
 }
 
-var addPart = async function(slotsToClear, stackPosition, offstageID, staged, scene, mirrorOBJ){
+var addPart = async function(slotsToClear, stackPosition, offstageID, staged, scene){
 
 	// //remove parts in stack positions above selected slot for remove and replace
 	//check if there are parts in the stack positions who refer to this one for offsets
@@ -438,13 +453,13 @@ var addPart = async function(slotsToClear, stackPosition, offstageID, staged, sc
 	
 
 
-	await theADD(staged, stackPosition, offstageID, scene, mirrorOBJ);
+	await theADD(staged, stackPosition, offstageID, scene);
 	return true;
 
 }
 
 
-var swapPart = async function(slotsToClear, stackPosition, offstageID, staged, scene, mirrorOBJ){
+var swapPart = async function(slotsToClear, stackPosition, offstageID, staged, scene){
 	
 	if(staged.onstage[stackPosition].offstageID != offstageID){//if the part we're calling has the same offstage id as the one thats there, do nothing
 		//check if there are parts in the stack positions who refer to this one for offsets
@@ -457,7 +472,7 @@ var swapPart = async function(slotsToClear, stackPosition, offstageID, staged, s
 		//finally remove the part that was orriginally called. 
 		await theRemove(stackPosition, staged.onstage[stackPosition].offstageID, staged, scene);
 		//now add the part to be swapped in
-		await addPart([],stackPosition, offstageID, staged, scene, mirrorOBJ);
+		await addPart([],stackPosition, offstageID, staged, scene);
 	}
 }
 

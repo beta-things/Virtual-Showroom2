@@ -111,10 +111,10 @@ parasails.registerPage('showroom', {
 
         var slotContent = _.find(this.build.buildParts, {slot:data.slotID});
         if(slotContent){//do we already have something in that slot?
-          await swapPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//yes: do a swap
+          await swapPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene);//yes: do a swap
           this.partIsLoading[data.slotIndex] = false; //stop spinner
         }else{
-          await addPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//no: just add it
+          await addPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene);//no: just add it
           this.partIsLoading[data.slotIndex] = false; //stop spinner
         }
                 
@@ -184,19 +184,20 @@ parasails.registerPage('showroom', {
 
     //SETS TOUR MODE STATUS ON PAGE LOAD
     //check for empty build on load. if empty open the preview interface
-    if(this.build.buildParts.length>0){
-      this.tourMode=false;
-    }else{
-      for(i=0; i<this.tourModeSlots.length; i++){
+    this.tourMode=false;
+    // if(this.build.buildParts.length>0){
+    //   this.tourMode=false;
+    // }else{
+    //   for(i=0; i<this.tourModeSlots.length; i++){
 
-        var slotIndex = this.tourModeSlots[i].index;
-        if(slotIndex != "H"){//ALL BUT THE HOMING 
-          this.tourModeSlots[i].name = this.templateWithSlots.slots[slotIndex].slotName;
-          this.tourModeSlots[i].slotID = this.templateWithSlots.slots[slotIndex].id;
-        }
-      }
-      this.$forceUpdate();
-    }
+    //     var slotIndex = this.tourModeSlots[i].index;
+    //     if(slotIndex != "H"){//ALL BUT THE HOMING 
+    //       this.tourModeSlots[i].name = this.templateWithSlots.slots[slotIndex].slotName;
+    //       this.tourModeSlots[i].slotID = this.templateWithSlots.slots[slotIndex].id;
+    //     }
+    //   }
+    //   this.$forceUpdate();
+    // }
     
   },
 
@@ -224,7 +225,7 @@ parasails.registerPage('showroom', {
 
       //kinda messy, but the stager also returns the mirror object
       var stagedResult = await stageMeshItems(this.scene, this.allParts, this.stagedProduct); //fills the staged object and amalgamates object's children animations
-      this.mirrorOBJ = stagedResult.mirrorOBJ;
+      //this.mirrorOBJ = stagedResult.mirrorOBJ;
       this.stagedProduct = stagedResult.stagedProduct;
 
       //this.scene.debugLayer.show();
