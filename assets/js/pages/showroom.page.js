@@ -214,7 +214,7 @@ parasails.registerPage('showroom', {
 			this.scene.clearColor = BABYLON.Color3.Black();
             
       addTheLights(this.scene);    
-      addFog(this.scene);
+      //addFog(this.scene);
 
       await importMeshItems(this.scene, this.templateWithSlots.meshFileName);
 
