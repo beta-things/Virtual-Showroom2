@@ -228,7 +228,7 @@ parasails.registerPage('showroom', {
       //this.mirrorOBJ = stagedResult.mirrorOBJ;
       this.stagedProduct = stagedResult.stagedProduct;
 
-      this.scene.debugLayer.show();
+      //this.scene.debugLayer.show();
 
 
     },
