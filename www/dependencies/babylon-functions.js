@@ -403,7 +403,8 @@ var theADD = async function(staged, stackPosition, offstageID, scene){
 
 		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
-			replacing.animGroup.start(false, -1, 2, 0, false);
+			replacing.animGroup.start(false, -1, 120, 0, false);
+			console.log(replacing.animGroup);
 			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
 				
 				resolve('resolved');
@@ -446,7 +447,7 @@ var addPart = async function(slotsToClear, stackPosition, offstageID, staged, sc
 	
 	//set up just the new part for position and animation
 	staged.offstage[stackPosition][offstageID].animGroup.start();
-	staged.offstage[stackPosition][offstageID].animGroup.goToFrame(2);
+	staged.offstage[stackPosition][offstageID].animGroup.goToFrame(120);
 	staged.offstage[stackPosition][offstageID].animGroup.stop();
 	staged.offstage[stackPosition][offstageID].part.position.z = 15; 
 	staged.offstage[stackPosition][offstageID].part.setEnabled(true);
@@ -496,7 +497,7 @@ var theRemove = function(stackPosition, offstageID, staged, scene){
 
 		});
 
-		removed.animGroup.start(false, 1, 0, 2, false);//trigger baked open animation 
+		removed.animGroup.start(false, 1, 0, 120, false);//trigger baked open animation 
 	
 	});
 			
