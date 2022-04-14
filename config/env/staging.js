@@ -54,7 +54,7 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
     //     ```
     //--------------------------------------------------------------------------
 
-    url: 'redis://redistogo:c2750cb3505727c9f299f3ce658fefe7@pike.redistogo.com:9031/',
+    url: 'redis://redistogo:ae872af7078b7f1610432234b4098bad@sole.redistogo.com:10771/',
     //--------------------------------------------------------------------------
     // /\  Hard-code your staging Redis server's `url`.
     // ||  (or use system env var: `sails_sockets__url`)
@@ -62,7 +62,7 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
   }),
 
   session: Object.assign({}, PRODUCTION_CONFIG.session, {
-    url: 'redis://redistogo:c2750cb3505727c9f299f3ce658fefe7@pike.redistogo.com:9031/',
+    url: 'redis://redistogo:ae872af7078b7f1610432234b4098bad@sole.redistogo.com:10771/',
     //--------------------------------------------------------------------------
     // /\  Hard-code your staging Redis server's `url` again here.
     // ||  (or use system env var: `sails_session__url`)
@@ -71,7 +71,7 @@ module.exports = Object.assign({}, PRODUCTION_CONFIG, {
 
   custom: Object.assign({}, PRODUCTION_CONFIG.custom, {
 
-    baseUrl: 'https://showroom.tekskil.com',
+    baseUrl: 'https://dream-build-demo.herokuapp.com',
     //--------------------------------------------------------------------------
     // /\  Hard-code the base URL where your staging environment is hosted.
     // ||  (or use system env var: `sails_custom__baseUrl`)
