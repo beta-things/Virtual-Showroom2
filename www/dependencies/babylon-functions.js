@@ -74,8 +74,9 @@ var addAndSetDefaultCamera = function(scene, camera, canvas){
 
 var generateFlatMirror = function(MIRRORMESH, others, scene){
 	// Create, position, and rotate a flat mesh surface.
-	var mirrorPlane = BABYLON.MeshBuilder.CreatePlane("mirrorPlane", {width: 1, height: 1}, scene);
+	var mirrorPlane = new BABYLON.MeshBuilder.CreatePlane("mirrorPlane", {width: 1, height: 1}, scene);
 	mirrorPlane.position = MIRRORMESH._absolutePosition;
+	//mirrorPlane.position = new BABYLON.Vector3(0.5 , 1.5,0);
 	mirrorPlane.rotation = new BABYLON.Vector3(5.49779, 4.71239, 0); //manually set the mirror plane rotation (45deg & 270deg from initial in radians)
 	//set the mirror plane to be parented by the MIRROR MESH
 	mirrorPlane.setParent(MIRRORMESH);
@@ -85,10 +86,6 @@ var generateFlatMirror = function(MIRRORMESH, others, scene){
 	//Ensure working with new values for mirror plane by computing and obtaining its worldMatrix
 	mirrorPlane.computeWorldMatrix(true);
 	var glass_worldMatrix = mirrorPlane.getWorldMatrix();
-
-	console.log('igen pos');
-	console.log(mirrorPlane.position);
-	
 
 	//Obtain normals for plane and assign one of them as the normal
 	var glass_vertexData = mirrorPlane.getVerticesData("normal");
@@ -101,7 +98,11 @@ var generateFlatMirror = function(MIRRORMESH, others, scene){
 	MIRRORMESH.material.reflectionTexture = new BABYLON.MirrorTexture("mirrorTexture", 2048, scene, true);
 	
 	// Get a normal vector from the mesh and invert it to create the mirror plane.
-	MIRRORMESH.material.reflectionTexture.mirrorPlane = BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	MIRRORMESH.material.reflectionTexture.mirrorPlane = new BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	console.log("mirror normal");
+	console.log(glassNormal.scale(-1));
+	console.log("mirror pos act");
+	console.log(mirrorPlane.position);
 
 	//add items that will be reflected into the renderList
 	for (var index = 0; index < others.length; index++) {
@@ -109,25 +110,29 @@ var generateFlatMirror = function(MIRRORMESH, others, scene){
 			MIRRORMESH.material.reflectionTexture.renderList.push(others[index]);
 		}
 	}
+
 	return {mirrorPlane:mirrorPlane, MIRRORMESH: MIRRORMESH};
 	
 }
 
 var regenerateFlatMirror = function(MIRRORMESH, mirrorPlane){
+	console.log('mir mesh pos');
+	console.log(MIRRORMESH._absolutePosition);
 	//MIRRROR STUFF
 	//Ensure working with new values for mirror plane by computing and obtaining its worldMatrix
 	mirrorPlane.computeWorldMatrix(true);
-
 	var glass_worldMatrix = mirrorPlane.getWorldMatrix();
-	console.log('regen pos');
-	console.log(mirrorPlane.position);
 	//Obtain normals for plane and assign one of them as the normal
 	var glass_vertexData = mirrorPlane.getVerticesData("normal");
 	var glassNormal = new BABYLON.Vector3(glass_vertexData[0], glass_vertexData[1], glass_vertexData[2]);	
 	//Use worldMatrix to transform normal into its current value
 	glassNormal = new BABYLON.Vector3.TransformNormal(glassNormal, glass_worldMatrix);
 	// Get a normal vector from the mesh and invert it to create the mirror plane.
-	MIRRORMESH.material.reflectionTexture.mirrorPlane = BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	MIRRORMESH.material.reflectionTexture.mirrorPlane = new BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
+	console.log("mirror normal");
+	console.log(glassNormal.scale(-1));
+	console.log("mirror pos act");
+	console.log(mirrorPlane.position);
 	console.log('regen mirror mesh');
 }
 
@@ -175,15 +180,7 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 			//then pull all their tageted animations into the customAnimgroup
 			if(allChildMeshes.length > 0){
 				allChildMeshes.forEach(aMesh => {
-					//check for special case MIRROR OR MIRRORED and add special material
-					//uses aMesh.id for blender name
-					if(aMesh.id == "MIRROR"){
-						MIRROR = aMesh;
-					}
-					if(aMesh.name.includes("MIRRORED")){
-						MIRROREDS.push(aMesh);
-					}
-
+					
 					var childAnimGroup = getAnimationGroupForObject(aMesh, scene);
 					if(childAnimGroup){
 						childAnimGroup._targetedAnimations.forEach(targAnim => {
@@ -229,7 +226,24 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 			
 			xOffTally=0;
 			yOffTally=0;
+
+			///
+
+			//check for special case MIRROR OR MIRRORED and add special material
+			if(allChildMeshes.length > 0){
+				allChildMeshes.forEach(aMesh => {
+					//uses aMesh.id for blender name
+					if(aMesh.id == "MIRROR"){
+						MIRROR = aMesh;
+					}
+					if(aMesh.name.includes("MIRRORED")){
+						MIRROREDS.push(aMesh);
+					}
+				});
+			}
 			
+
+			////
 		}
 	}
 
@@ -388,7 +402,7 @@ var theADD = async function(staged, stackPosition, offstageID, scene, mirrorOBJ)
 
 		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
-			replacing.animGroup.start(false, -1, 2, 0, false);
+			replacing.animGroup.start(false, -1, 120, 0, false);
 			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
 				regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
 				resolve('resolved');
@@ -431,7 +445,7 @@ var addPart = async function(slotsToClear, stackPosition, offstageID, staged, sc
 	
 	//set up just the new part for position and animation
 	staged.offstage[stackPosition][offstageID].animGroup.start();
-	staged.offstage[stackPosition][offstageID].animGroup.goToFrame(2);
+	staged.offstage[stackPosition][offstageID].animGroup.goToFrame(120);
 	staged.offstage[stackPosition][offstageID].animGroup.stop();
 	staged.offstage[stackPosition][offstageID].part.position.z = 15; 
 	staged.offstage[stackPosition][offstageID].part.setEnabled(true);
@@ -481,7 +495,7 @@ var theRemove = function(stackPosition, offstageID, staged, scene){
 
 		});
 
-		removed.animGroup.start(false, 1, 0, 2, false);//trigger baked open animation 
+		removed.animGroup.start(false, 1, 0, 120, false);//trigger baked open animation 
 	
 	});
 			
