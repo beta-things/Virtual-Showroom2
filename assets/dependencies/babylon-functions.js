@@ -404,6 +404,7 @@ var theADD = async function(staged, stackPosition, offstageID, scene){
 		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
 			replacing.animGroup.start(false, -1, 2, 0, false);
+			console.log(replacing.animGroup);
 			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
 				
 				resolve('resolved');
