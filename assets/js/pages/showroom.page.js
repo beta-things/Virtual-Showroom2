@@ -140,7 +140,8 @@ parasails.registerPage('showroom', {
       }
       this._loadingDiv = document.createElement("div");
       this._loadingDiv.id = "customLoadingScreenDiv";
-      this._loadingDiv.innerHTML = " <div id='home_boarder'> <img src='/images/TS_LOADER.gif'/> </div>";
+      this._loadingDiv.innerHTML = " <div id='home_boarder'class='container-fluid' > <div class='row' style='align-items: center; justify-content: center;' > <div class='col'> <img style='width:90%;' src='/images/TS_LOADER.gif'/></div> </div>  </div>";
+      //<div class='row'><div class='col'><h1>Loading</h1></div> </div>
       var customLoadingScreenCss = document.createElement('style');
       
       this._resizeLoadingUI();
@@ -149,14 +150,14 @@ parasails.registerPage('showroom', {
     }
 
     BABYLON.DefaultLoadingScreen.prototype.hideLoadingUI =  async function(){
-			if (document.getElementById("customLoadingScreenDiv")) {
-				$('#home_boarder').fadeOut( 500, function() {
-					$('#customLoadingScreenDiv').fadeOut( 1500, function() {
-						//document.getElementById("customLoadingScreenDiv").remove();
-						console.log("scene is now loaded");
-					});
-				});
-			}
+			// if (document.getElementById("customLoadingScreenDiv")) {
+			// 	$('#home_boarder').fadeOut( 500, function() {
+			// 		$('#customLoadingScreenDiv').fadeOut( 1500, function() {
+			// 			//document.getElementById("customLoadingScreenDiv").remove();
+			// 			console.log("scene is now loaded");
+			// 		});
+			// 	});
+			// }
 			
 			
 		}

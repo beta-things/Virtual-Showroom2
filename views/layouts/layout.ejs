@@ -5,7 +5,7 @@
 } %><!DOCTYPE html>
 <html>
   <head>
-    <title>Tekskil Virtual Showroom</title>
+    <title>Dream Build Demo</title>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
@@ -47,14 +47,14 @@
   </head>
   <body>
     <div purpose="page-wrap">
-      <header style="padding:0px 1rem" class="navbar navbar-expand-sm navbar-dark bg-dark flex-column flex-md-row justify-content-between" purpose="page-header">
+      <header style="padding:0px 1rem; background-color: rgb(45,45,45);" class="navbar navbar-expand-sm navbar-dark  flex-column flex-md-row justify-content-between" purpose="page-header">
         <% if(me){ %>
         <a style="cursor: pointer; opacity:50%" class="navbar-brand mr-0" href="/admin">
-          <img style="height: 40px;" class="logo" alt="Tekskil Logo" src="/images/logo.png"/>
+          <img style="height: 40px;" class="logo" alt="Logo" src="/images/logo.png"/>
         </a>
         <% }else{ %>
           <a style="cursor: pointer; opacity:50%" class="navbar-brand mr-0" href="/">
-            <img style="height: 40px;" class="logo" alt="Tekskil Logo" src="/images/logo.png"/>
+            <img style="height: 40px;" class="logo" alt="Logo" src="/images/logo.png"/>
           </a>
         <% } %>
 
@@ -116,7 +116,7 @@
           <% } %>
           -->
         </div>
-        <small purpose="footer-copy">Copyright &copy; <%= sails.config.custom.platformCopyrightYear %> TEKSKIL VIRTUAL SHOWROOM. <br class="d-block d-sm-none"/>All rights reserved.</small>
+        <small purpose="footer-copy">Copyright &copy; <%= sails.config.custom.platformCopyrightYear %> Dream Build Showroom. <br class="d-block d-sm-none"/>All rights reserved.</small>
       </footer>
     </div>
 
