@@ -158,6 +158,7 @@ var getAllMeshChildren = function(parentMesh){
 var stageMeshItems = async function(scene, stagingParts, staged){
 	var xOffTally = 0;
 	var yOffTally = 0;
+  //lower in this function mirrors have been dissabled Jan 2024
 	var MIRROR = undefined;
 	var MIRROREDS = [];
 
@@ -230,17 +231,17 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 			///
 
 			//check for special case MIRROR OR MIRRORED and add special material
-			if(allChildMeshes.length > 0){
-				allChildMeshes.forEach(aMesh => {
-					//uses aMesh.id for blender name
-					if(aMesh.id == "MIRROR"){
-						MIRROR = aMesh;
-					}
-					if(aMesh.name.includes("MIRRORED")){
-						MIRROREDS.push(aMesh);
-					}
-				});
-			}
+			// if(allChildMeshes.length > 0){
+			// 	allChildMeshes.forEach(aMesh => {
+			// 		//uses aMesh.id for blender name
+			// 		if(aMesh.id == "MIRROR"){
+			// 			MIRROR = aMesh;
+			// 		}
+			// 		if(aMesh.name.includes("MIRRORED")){
+			// 			MIRROREDS.push(aMesh);
+			// 		}
+			// 	});
+			// }
 			
 
 			////
@@ -319,10 +320,10 @@ var stageMeshItems = async function(scene, stagingParts, staged){
 		}
 	}
 	// MIRROR STUFF
-	var mirrorOBJ = generateFlatMirror(MIRROR, MIRROREDS, scene);
+	//var mirrorOBJ = generateFlatMirror(MIRROR, MIRROREDS, scene);
 	
 	return {
-		mirrorOBJ : mirrorOBJ,
+		//mirrorOBJ : mirrorOBJ,
 		stagedProduct: staged,
 	};
 			
