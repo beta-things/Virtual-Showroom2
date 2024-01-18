@@ -405,7 +405,7 @@ var theADD = async function(staged, stackPosition, offstageID, scene, mirrorOBJ)
 
 			replacing.animGroup.start(false, -1, 120, 0, false);
 			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
-				regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
+				//regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
 				resolve('resolved');
 			});
 		});
