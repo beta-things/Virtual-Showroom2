@@ -224,7 +224,7 @@ parasails.registerPage('showroom', {
 
       //kinda messy, but the stager also returns the mirror object
       var stagedResult = await stageMeshItems(this.scene, this.allParts, this.stagedProduct); //fills the staged object and amalgamates object's children animations
-      this.mirrorOBJ = stagedResult.mirrorOBJ;
+      //this.mirrorOBJ = stagedResult.mirrorOBJ;
       this.stagedProduct = stagedResult.stagedProduct;
 
       //this.scene.debugLayer.show();
