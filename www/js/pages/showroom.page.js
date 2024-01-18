@@ -111,10 +111,11 @@ parasails.registerPage('showroom', {
 
         var slotContent = _.find(this.build.buildParts, {slot:data.slotID});
         if(slotContent){//do we already have something in that slot?
-          await swapPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//yes: do a swap
+          //SWAP AND ADD USED TO PASS MIRROR OBJECT. REMOVED JAN 2024
+          await swapPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, null);//yes: do a swap
           this.partIsLoading[data.slotIndex] = false; //stop spinner
         }else{
-          await addPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, this.mirrorOBJ);//no: just add it
+          await addPart(slotsToClear, data.slotIndex, data.offstageIndex, this.stagedProduct, this.scene, null);//no: just add it
           this.partIsLoading[data.slotIndex] = false; //stop spinner
         }
                 
