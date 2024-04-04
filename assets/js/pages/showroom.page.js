@@ -150,14 +150,14 @@ parasails.registerPage('showroom', {
     }
 
     BABYLON.DefaultLoadingScreen.prototype.hideLoadingUI =  async function(){
-			// if (document.getElementById("customLoadingScreenDiv")) {
-			// 	$('#home_boarder').fadeOut( 500, function() {
-			// 		$('#customLoadingScreenDiv').fadeOut( 1500, function() {
-			// 			//document.getElementById("customLoadingScreenDiv").remove();
-			// 			console.log("scene is now loaded");
-			// 		});
-			// 	});
-			// }
+			if (document.getElementById("customLoadingScreenDiv")) {
+				$('#home_boarder').fadeOut( 500, function() {
+					$('#customLoadingScreenDiv').fadeOut( 1500, function() {
+						//document.getElementById("customLoadingScreenDiv").remove();
+						console.log("scene is now loaded");
+					});
+				});
+			}
 			
 			
 		}
@@ -213,7 +213,7 @@ parasails.registerPage('showroom', {
       this.engine.displayLoadingUI();
       // Create a basic BJS Scene object
       this.scene = new BABYLON.Scene(this.engine);
-			this.scene.clearColor = BABYLON.Color3.Black();
+			this.scene.clearColor = BABYLON.Color3.White();
             
       addTheLights(this.scene);    
       //addFog(this.scene);

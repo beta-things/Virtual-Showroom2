@@ -51,15 +51,291 @@ var constructPartsArray = function(templateWithSlots, allParts){
 
 }		
 
+
+
+
+// var getAllMeshChildren = function(parentMesh){
+// 	var return_meshes = [];
+// 	if(parentMesh._children){
+// 		parentMesh._children.forEach(element => {
+// 			return_meshes.push(element);
+// 		});
+// 		return_meshes.forEach(element => {
+// 			var theChildrenMeshes = getAllMeshChildren(element);
+// 			if(theChildrenMeshes.length > 0)
+// 				theChildrenMeshes.forEach(el => {
+// 					return_meshes.push(el);
+// 				});
+				
+// 		});
+// 	}
+// 	// console.log('parent mesh');
+// 	// console.log(parentMesh);
+// 	// console.log('children miis');
+// 	// console.log(return_meshes);
+// 	return return_meshes;
+// }
+
+// var stageMeshItems = async function(scene, stagingParts, staged){
+// 	var xOffTally = 0;
+// 	var yOffTally = 0;
+
+// 	//Onstage Parts 
+// 	for(t=0; t<stagingParts.onstage.length; t++){//stack locations
+
+
+// 		if(stagingParts.onstage[t].name != "place-holder"){
+
+// 			var foundTopLevelMesh = scene.getNodeByName(stagingParts.onstage[t].name);
+// 			console.log(foundTopLevelMesh)
+// 			if(!foundTopLevelMesh){
+// 				console.log("failed to find mesh named: "+stagingParts.onstage[t].name);
+// 			}
+
+// 			//find mesh's children then find the children's animation groups , then combine them
+// 			//follow every lineage trail to extract all child meshes into an array  
+// 			var allChildMeshes = getAllMeshChildren(foundTopLevelMesh);
+// 			var customAnimGroup = [];
+// 			//then pull all their targeted animations into the customAnimgroup
+// 			if(allChildMeshes.length > 0){
+// 				allChildMeshes.forEach(aMesh => {
+					
+// 					var childAnimGroup = getAnimationGroupForObject(aMesh, scene);
+// 					if(childAnimGroup){
+// 						childAnimGroup._targetedAnimations.forEach(targAnim => {
+// 							customAnimGroup.push(targAnim);
+// 						});
+// 					}
+// 				});
+
+// 			}
+		
+// 			//build proto of new animation group then add my array of targeted animations to it 
+// 			var returnAnimGroup = new BABYLON.AnimationGroup("paul");
+			
+// 			for(r=0; r<customAnimGroup.length; r++){
+// 				returnAnimGroup.addTargetedAnimation(customAnimGroup[r].animation, customAnimGroup[r].target);
+// 			}
+// 			returnAnimGroup.start(false, -1, 120, 0, false);
+			
+// 			staged.onstage[t] = {
+// 									part: foundTopLevelMesh, 
+// 									animGroup: returnAnimGroup, 
+// 									offstageID:stagingParts.onstage[t].offstageID,
+// 									assembledState: 0,
+// 									xOff: stagingParts.onstage[t].xOff,
+// 									yOff: stagingParts.onstage[t].yOff,	
+// 									hasPreReq: stagingParts.onstage[t].hasPreReq,
+// 									preReqPartID: stagingParts.onstage[t].preReqPartID,	
+// 									partID: stagingParts.onstage[t].partID,	
+// 									offsetObservances: stagingParts.onstage[t].offsetObservances		
+// 								}; 
+
+// 			//for each offset observance of a part find any live part in that slot and add it's offsets to the tally
+// 			var offsetObservances = stagingParts.onstage[t].offsetObservances;
+// 			for(var obs=0; obs<offsetObservances.length; obs++){
+// 				if(stagingParts.onstage[offsetObservances[obs].stackPosition].name != "place-holder" ){ //so long as there is a part in this slot 
+// 					xOffTally += stagingParts.onstage[offsetObservances[obs].stackPosition].xOff;
+// 					yOffTally += stagingParts.onstage[offsetObservances[obs].stackPosition].yOff;
+// 				}
+			
+// 			}
+
+// 			foundTopLevelMesh.position.x = xOffTally;
+// 			foundTopLevelMesh.position.y = yOffTally;
+			
+// 			xOffTally=0;
+// 			yOffTally=0;
+
+	
+// 		}
+// 	}
+
+	
+// 	//offstage parts 
+// 	for(var i=0; i<stagingParts.offstage.length; i++){ //i is stack level
+		
+// 		staged.offstage[i] = [];//this stack position can have many candidates
+// 		for(var v=0; v<stagingParts.offstage[i].length; v++){ //v is offstage id for stack level
+// 			if(stagingParts.offstage[i][v].name != "place-holder"){
+// 				var foundMesh = scene.getNodeByName(stagingParts.offstage[i][v].name);
+// 				//build fancy animation group from all the children
+
+// 				if(!foundMesh){
+// 					console.log("failed to find mesh named: "+stagingParts.offstage[i][v].name);
+// 				}
+
+// 				var customAnimGroup = [];
+	
+// 				//grab some child animations
+// 				var allChildMeshes = getAllMeshChildren(foundMesh);
+
+
+// 				if(allChildMeshes != null){
+
+// 					for(x=0; x<allChildMeshes.length; x++){
+// 						var childMesh = allChildMeshes[x];
+// 						//uses childMesh.id for blender name
+// 						console.log("childmesh");
+// 						console.log(childMesh);
+// 						var childAnimGroup = getAnimationGroupForObject(childMesh, scene);
+// 						console.log(childAnimGroup);
+// 						if(childAnimGroup){
+// 							for(y=0; y<childAnimGroup._targetedAnimations.length; y++){
+// 								customAnimGroup.push(childAnimGroup._targetedAnimations[y]);
+// 							}
+
+// 						}
+// 					}
+// 				}
+				
+// 				//build proto of new animation group then add my array of targeteds to it
+// 				var returnAnimGroup = new BABYLON.AnimationGroup("pauloffstage");
+				
+// 				for(r=0; r<customAnimGroup.length; r++){
+// 					returnAnimGroup.addTargetedAnimation(customAnimGroup[r].animation, customAnimGroup[r].target);
+// 				}
+				
+// 				staged.offstage[i][v]={
+// 											part: foundMesh, 
+// 											animGroup: returnAnimGroup, 
+// 											offstageID: v,
+// 											assembledState: 0,
+// 											xOff: stagingParts.offstage[i][v].xOff,
+// 											yOff: stagingParts.offstage[i][v].yOff,	
+// 											hasPreReq: stagingParts.offstage[i][v].hasPreReq,
+// 											preReqPartID: stagingParts.offstage[i][v].preReqPartID,	
+// 											partID: stagingParts.offstage[i][v].partID,
+// 											offsetObservances: stagingParts.offstage[i][v].offsetObservances
+// 									};
+				
+				
+// 				foundMesh.position.z = 15;
+// 				foundMesh.setEnabled(false);
+				
+// 			}	
+// 		}
+// 	}
+		
+// 	return {
+// 		stagedProduct: staged,
+// 	};
+			
+// }
+
+var getAllMeshChildren = function(parentMesh) {
+    var return_meshes = [];
+
+    // Recursive function to traverse the hierarchy
+    var addChildren = function(mesh) {
+        if (mesh._children && mesh._children.length > 0) {
+            mesh._children.forEach(child => {
+                return_meshes.push(child); // Add the direct child to the list
+                addChildren(child); // Recursively add all children of the current child
+            });
+        }
+    };
+
+    addChildren(parentMesh); // Start the recursive traversal
+
+    return return_meshes;
+};
+
+const PLACE_HOLDER = "place-holder";
+
+async function stageMeshItems(scene, stagingParts, staged) {
+    // Function to process each part, either onstage or offstage
+    const processPart = (part, isOnstage, xOffTally, yOffTally) => {
+        if (part.name !== PLACE_HOLDER) {
+            const emptyMeshParent = scene.getNodeByName(part.name);
+            if (!emptyMeshParent) {
+                console.log(`failed to find mesh named: ${part.name}`);
+                return null;
+            }
+			console.log("empty partent = ");
+			console.log(emptyMeshParent);
+            const allChildMeshes = getAllMeshChildren(emptyMeshParent);
+			console.log(allChildMeshes);
+            const customAnimGroup = [];
+
+            allChildMeshes.forEach(aMesh => {
+                const childAnims = getAnimationGroupsForObject(aMesh, scene);
+				childAnims.forEach(anim => {
+					if(anim) {
+						customAnimGroup.push(anim);
+					}
+				});	
+					
+            });
+
+            const returnAnimGroup = new BABYLON.AnimationGroup();
+            customAnimGroup.forEach(anim => {
+                returnAnimGroup.addTargetedAnimation(anim.animation, anim.target);
+            });
+            //returnAnimGroup.start(false, -1, 120, 0, false);
+
+            if (isOnstage) {
+                emptyMeshParent.position.x = xOffTally;
+                emptyMeshParent.position.y = yOffTally;
+            } else {
+                emptyMeshParent.position.z = 15;
+                emptyMeshParent.setEnabled(false);
+            }
+
+            return {
+                part: emptyMeshParent,
+                animGroup: returnAnimGroup,
+                offstageID: part.offstageID,
+                assembledState: part.assembledState,
+                xOff: part.xOff,
+                yOff: part.yOff,
+                hasPreReq: part.hasPreReq,
+                preReqPartID: part.preReqPartID,
+                partID: part.partID,
+                offsetObservances: part.offsetObservances
+            };
+        }
+        return null;
+    };
+
+    // Process both onstage and offstage parts
+    staged.onstage = [];
+    stagingParts.onstage.forEach((part, index) => {
+        let xOffTally = 0;
+        let yOffTally = 0;
+
+        // Process onstage part
+        const processedOnstage = processPart(part, true, xOffTally, yOffTally);
+        if (processedOnstage) {
+            part.offsetObservances.forEach(obs => {
+                if (stagingParts.onstage[obs.stackPosition].name !== PLACE_HOLDER) {
+                    xOffTally += stagingParts.onstage[obs.stackPosition].xOff;
+                    yOffTally += stagingParts.onstage[obs.stackPosition].yOff;
+                }
+            });
+            processedOnstage.xOff += xOffTally;
+            processedOnstage.yOff += yOffTally;
+            staged.onstage[index] = processedOnstage;
+        }
+    });
+
+    // Process offstage parts
+    staged.offstage = stagingParts.offstage.map(stack =>
+        stack.map(part => processPart(part, false, 0, 0))
+    );
+
+    return { stagedProduct: staged };
+}
+
 var addAndSetDefaultCamera = function(scene, camera, canvas){
 
 	// Parameters: name, alpha, beta, radius, target position, scene
-	camera = new BABYLON.ArcRotateCamera("ArcRotCamera", 1.04, 1.80, 5, new BABYLON.Vector3(0, -0.75, 0), scene);
+	camera = new BABYLON.ArcRotateCamera("ArcRotCamera", 1.6, 1.14, 0.49, new BABYLON.Vector3(0, 0.066, 0), scene);
 	camera.attachControl(this.canvas, true);
 	//zoom limits
-	camera.lowerRadiusLimit = 1;
-	camera.upperRadiusLimit = 5;
-	camera.wheelPrecision = 30;
+	camera.lowerRadiusLimit = 0.250;
+	camera.upperRadiusLimit = 0.65;
+	camera.wheelPrecision = 200;
 	camera.panningSensibility = 0;
 	//clipping
 	camera.maxZ = 20;
@@ -73,287 +349,34 @@ var addAndSetDefaultCamera = function(scene, camera, canvas){
 
 }
 
-var generateFlatMirror = function(MIRRORMESH, others, scene){
-	// Create, position, and rotate a flat mesh surface.
-	var mirrorPlane = new BABYLON.MeshBuilder.CreatePlane("mirrorPlane", {width: 1, height: 1}, scene);
-	mirrorPlane.position = MIRRORMESH._absolutePosition;
-	//mirrorPlane.position = new BABYLON.Vector3(0.5 , 1.5,0);
-	mirrorPlane.rotation = new BABYLON.Vector3(5.49779, 4.71239, 0); //manually set the mirror plane rotation (45deg & 270deg from initial in radians)
-	//set the mirror plane to be parented by the MIRROR MESH
-	mirrorPlane.setParent(MIRRORMESH);
-	//we don't needto see this plane it is simply our mirror probe whose reflections are mapped to our mirror mesh
-	mirrorPlane.isVisible = false;
-
-	//Ensure working with new values for mirror plane by computing and obtaining its worldMatrix
-	mirrorPlane.computeWorldMatrix(true);
-	var glass_worldMatrix = mirrorPlane.getWorldMatrix();
-
-	//Obtain normals for plane and assign one of them as the normal
-	var glass_vertexData = mirrorPlane.getVerticesData("normal");
-	var glassNormal = new BABYLON.Vector3(glass_vertexData[0], glass_vertexData[1], glass_vertexData[2]);	
-	//Use worldMatrix to transform normal into its current value
-	glassNormal = new BABYLON.Vector3.TransformNormal(glassNormal, glass_worldMatrix);
-
-	// Create the reflective material for the mesh.
-	MIRRORMESH.material = new BABYLON.StandardMaterial("mirrorMaterial", scene);
-	MIRRORMESH.material.reflectionTexture = new BABYLON.MirrorTexture("mirrorTexture", 2048, scene, true);
-	
-	// Get a normal vector from the mesh and invert it to create the mirror plane.
-	MIRRORMESH.material.reflectionTexture.mirrorPlane = new BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
-	console.log("mirror normal");
-	console.log(glassNormal.scale(-1));
-	console.log("mirror pos act");
-	console.log(mirrorPlane.position);
-
-	//add items that will be reflected into the renderList
-	for (var index = 0; index < others.length; index++) {
-		if(others[index].name.includes('primitive')){
-			MIRRORMESH.material.reflectionTexture.renderList.push(others[index]);
-		}
-	}
-
-	return {mirrorPlane:mirrorPlane, MIRRORMESH: MIRRORMESH};
-	
-}
-
-var regenerateFlatMirror = function(MIRRORMESH, mirrorPlane){
-	console.log('mir mesh pos');
-	console.log(MIRRORMESH._absolutePosition);
-	//MIRRROR STUFF
-	//Ensure working with new values for mirror plane by computing and obtaining its worldMatrix
-	mirrorPlane.computeWorldMatrix(true);
-	var glass_worldMatrix = mirrorPlane.getWorldMatrix();
-	//Obtain normals for plane and assign one of them as the normal
-	var glass_vertexData = mirrorPlane.getVerticesData("normal");
-	var glassNormal = new BABYLON.Vector3(glass_vertexData[0], glass_vertexData[1], glass_vertexData[2]);	
-	//Use worldMatrix to transform normal into its current value
-	glassNormal = new BABYLON.Vector3.TransformNormal(glassNormal, glass_worldMatrix);
-	// Get a normal vector from the mesh and invert it to create the mirror plane.
-	MIRRORMESH.material.reflectionTexture.mirrorPlane = new BABYLON.Plane.FromPositionAndNormal(mirrorPlane.position, glassNormal.scale(-1));
-	console.log("mirror normal");
-	console.log(glassNormal.scale(-1));
-	console.log("mirror pos act");
-	console.log(mirrorPlane.position);
-	console.log('regen mirror mesh');
-}
-
-var getAllMeshChildren = function(parentMesh){
-	var return_meshes = [];
-	if(parentMesh._children){
-		parentMesh._children.forEach(element => {
-			return_meshes.push(element);
-		});
-		return_meshes.forEach(element => {
-			var theChildrenMeshes = getAllMeshChildren(element);
-			if(theChildrenMeshes.length > 0)
-				theChildrenMeshes.forEach(el => {
-					return_meshes.push(el);
-				});
-				
-		});
-	}
-
-	return return_meshes;
-}
-
-var stageMeshItems = async function(scene, stagingParts, staged){
-	var xOffTally = 0;
-	var yOffTally = 0;
-	var MIRROR = undefined;
-	var MIRROREDS = [];
-
-	//Onstage Parts 
-	for(t=0; t<stagingParts.onstage.length; t++){//stack locations
-
-
-		if(stagingParts.onstage[t].name != "place-holder"){
-
-			var foundTopLevelMesh = scene.getNodeByName(stagingParts.onstage[t].name);
-
-			if(!foundTopLevelMesh){
-				console.log("failed to find mesh named: "+stagingParts.onstage[t].name);
-			}
-
-			//find mesh's children then find the children's animation groups , then combine them
-			//follow every lineage trail to extract all child meshes into an array  
-			var allChildMeshes = getAllMeshChildren(foundTopLevelMesh);
-			var customAnimGroup = [];
-			//then pull all their tageted animations into the customAnimgroup
-			if(allChildMeshes.length > 0){
-				allChildMeshes.forEach(aMesh => {
-					
-					var childAnimGroup = getAnimationGroupForObject(aMesh, scene);
-					if(childAnimGroup){
-						childAnimGroup._targetedAnimations.forEach(targAnim => {
-							customAnimGroup.push(targAnim);
-						});
-					}
-				});
-
-			}
-		
-			//build proto of new animation group then add my array of targeted animations to it 
-			var returnAnimGroup = new BABYLON.AnimationGroup();
-			
-			for(r=0; r<customAnimGroup.length; r++){
-				returnAnimGroup.addTargetedAnimation(customAnimGroup[r].animation, customAnimGroup[r].target);
-			}
-			
-			staged.onstage[t] = {
-									part: foundTopLevelMesh, 
-									animGroup: returnAnimGroup, 
-									offstageID:stagingParts.onstage[t].offstageID,
-									assembledState: 0,
-									xOff: stagingParts.onstage[t].xOff,
-									yOff: stagingParts.onstage[t].yOff,	
-									hasPreReq: stagingParts.onstage[t].hasPreReq,
-									preReqPartID: stagingParts.onstage[t].preReqPartID,	
-									partID: stagingParts.onstage[t].partID,	
-									offsetObservances: stagingParts.onstage[t].offsetObservances		
-								}; 
-
-			//for each offset observance of a part find any live part in that slot and add it's offsets to the tally
-			var offsetObservances = stagingParts.onstage[t].offsetObservances;
-			for(var obs=0; obs<offsetObservances.length; obs++){
-				if(stagingParts.onstage[offsetObservances[obs].stackPosition].name != "place-holder" ){ //so long as there is a part in this slot 
-					xOffTally += stagingParts.onstage[offsetObservances[obs].stackPosition].xOff;
-					yOffTally += stagingParts.onstage[offsetObservances[obs].stackPosition].yOff;
-				}
-			
-			}
-
-			foundTopLevelMesh.position.x = xOffTally;
-			foundTopLevelMesh.position.y = yOffTally;
-			
-			xOffTally=0;
-			yOffTally=0;
-
-			///
-
-			//check for special case MIRROR OR MIRRORED and add special material
-			if(allChildMeshes.length > 0){
-				allChildMeshes.forEach(aMesh => {
-					//uses aMesh.id for blender name
-					if(aMesh.id == "MIRROR"){
-						MIRROR = aMesh;
-					}
-					if(aMesh.name.includes("MIRRORED")){
-						MIRROREDS.push(aMesh);
-					}
-				});
-			}
-			
-
-			////
-		}
-	}
-
-	
-	//offstage parts 
-	for(var i=0; i<stagingParts.offstage.length; i++){ //i is stack level
-		
-		staged.offstage[i] = [];//this stack position can have many candidates
-		for(var v=0; v<stagingParts.offstage[i].length; v++){ //v is offstage id for stack level
-			if(stagingParts.offstage[i][v].name != "place-holder"){
-				var foundMesh = scene.getNodeByName(stagingParts.offstage[i][v].name);
-				//build fancy animation group from all the children
-
-				if(!foundMesh){
-					console.log("failed to find mesh named: "+stagingParts.offstage[i][v].name);
-				}
-				
-				var customAnimGroup = [];
-	
-				//grab some child animations
-				var allChildMeshes = getAllMeshChildren(foundMesh);
-
-
-				if(allChildMeshes != null){
-
-					for(x=0; x<allChildMeshes.length; x++){
-						var childMesh = allChildMeshes[x];
-
-						if(childMesh.id == "MIRROR"){
-							MIRROR = childMesh;
-						}
-						if(childMesh.name.includes("MIRRORED")){
-							MIRROREDS.push(childMesh);
-						}
-
-						//check for special case MIRROR OR MIRRORED and add special material
-						//uses childMesh.id for blender name
-						var childAnimGroup = getAnimationGroupForObject(childMesh, scene);
-						if(childAnimGroup){
-							for(y=0; y<childAnimGroup._targetedAnimations.length; y++){
-								customAnimGroup.push(childAnimGroup._targetedAnimations[y]);
-							}
-
-						}
-					}
-				}
-				
-				//build proto of new animation group then add my array of targeteds to it
-				var returnAnimGroup = new BABYLON.AnimationGroup();
-				
-				for(r=0; r<customAnimGroup.length; r++){
-					returnAnimGroup.addTargetedAnimation(customAnimGroup[r].animation, customAnimGroup[r].target);
-				}
-				
-				staged.offstage[i][v]={
-											part: foundMesh, 
-											animGroup: returnAnimGroup, 
-											offstageID: v,
-											assembledState: 0,
-											xOff: stagingParts.offstage[i][v].xOff,
-											yOff: stagingParts.offstage[i][v].yOff,	
-											hasPreReq: stagingParts.offstage[i][v].hasPreReq,
-											preReqPartID: stagingParts.offstage[i][v].preReqPartID,	
-											partID: stagingParts.offstage[i][v].partID,
-											offsetObservances: stagingParts.offstage[i][v].offsetObservances
-									};
-				
-				
-				foundMesh.position.z = 15;
-				foundMesh.setEnabled(false);
-				
-			}	
-		}
-	}
-	// MIRROR STUFF
-	//var mirrorOBJ = generateFlatMirror(MIRROR, MIRROREDS, scene);
-	
-	return {
-		//mirrorOBJ : mirrorOBJ,
-		stagedProduct: staged,
-	};
-			
-}
-
 var addTheLights = function(scene){
-	var baseLightIntensity = 120;
+	var baseLightIntensity = 1.5;
 
-	var light1 = new BABYLON.SpotLight("spotLight1", new BABYLON.Vector3(-1, 3, 1), new BABYLON.Vector3(0.3, -1, -0.3), Math.PI / 3, 1, scene);
-	light1.diffuse = new BABYLON.Color3(1, 1, 0.8);
-	light1.specular = new BABYLON.Color3(1, 1, 0.9);
+	// var light1 = new BABYLON.SpotLight("spotLight1", new BABYLON.Vector3(-1, 3, 1), new BABYLON.Vector3(0.3, -1, -0.3), Math.PI / 3, 1, scene);
+	const light1 = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 2, 0), scene);
+	light1.diffuse = new BABYLON.Color3(1, 1, 1);
+	light1.specular = new BABYLON.Color3(1, 1, 1);
 	light1.intensity = baseLightIntensity;
-	var light2 = new BABYLON.SpotLight("spotLight2", new BABYLON.Vector3(1, 3, 1), new BABYLON.Vector3(-0.3, -1, -0.3), Math.PI / 3, 1, scene);
-	light2.diffuse = new BABYLON.Color3(1, 1, 0.8);
-	light2.specular = new BABYLON.Color3(1, 1, 0.9);
-	light2.intensity = baseLightIntensity;
-	var light3 = new BABYLON.SpotLight("spotLight3", new BABYLON.Vector3(0, 3, -1), new BABYLON.Vector3(-0.1, -1, 0.3), Math.PI / 3, 1, scene);
-	light3.diffuse = new BABYLON.Color3(1, 1, 0.8);
-	light3.specular = new BABYLON.Color3(1, 1, 0.9);
-	light3.intensity = baseLightIntensity;
 
-	// var light4 = new BABYLON.SpotLight("spotLight4", new BABYLON.Vector3(0, .8, -2), new BABYLON.Vector3(0, 0.05, 1), Math.PI / 2, 1, scene);
-	// light4.diffuse = new BABYLON.Color3(1, 1, 0.8);
-	// light4.specular = new BABYLON.Color3(1, 1, 0.9);
-	// light4.intensity = baseLightIntensity;
+	
+	// var light2 = new BABYLON.SpotLight("spotLight2", new BABYLON.Vector3(1, 3, 1), new BABYLON.Vector3(-0.3, -1, -0.3), Math.PI / 3, 1, scene);
+	// light2.diffuse = new BABYLON.Color3(1, 1, 0.8);
+	// light2.specular = new BABYLON.Color3(1, 1, 0.9);
+	// light2.intensity = baseLightIntensity;
+	// var light3 = new BABYLON.SpotLight("spotLight3", new BABYLON.Vector3(0, 3, -1), new BABYLON.Vector3(-0.1, -1, 0.3), Math.PI / 3, 1, scene);
+	// light3.diffuse = new BABYLON.Color3(1, 1, 0.8);
+	// light3.specular = new BABYLON.Color3(1, 1, 0.9);
+	// light3.intensity = baseLightIntensity;
 
-	var light5 = new BABYLON.SpotLight("spotLight5", new BABYLON.Vector3(-2, .8, 2), new BABYLON.Vector3(1, 0.1, -1), Math.PI / 2, 1, scene);
-	light5.diffuse = new BABYLON.Color3(1, 1, 0.8);
-	light5.specular = new BABYLON.Color3(1, 1, 0.9);
-	light5.intensity = baseLightIntensity;
+	// // var light4 = new BABYLON.SpotLight("spotLight4", new BABYLON.Vector3(0, .8, -2), new BABYLON.Vector3(0, 0.05, 1), Math.PI / 2, 1, scene);
+	// // light4.diffuse = new BABYLON.Color3(1, 1, 0.8);
+	// // light4.specular = new BABYLON.Color3(1, 1, 0.9);
+	// // light4.intensity = baseLightIntensity;
+
+	// var light5 = new BABYLON.SpotLight("spotLight5", new BABYLON.Vector3(-2, .8, 2), new BABYLON.Vector3(1, 0.1, -1), Math.PI / 2, 1, scene);
+	// light5.diffuse = new BABYLON.Color3(1, 1, 0.8);
+	// light5.specular = new BABYLON.Color3(1, 1, 0.9);
+	// light5.intensity = baseLightIntensity;
 
 	// var light6 = new BABYLON.SpotLight("spotLight6", new BABYLON.Vector3(2, .8, 0), new BABYLON.Vector3(-1, 0.2, 0), Math.PI / 2, 1, scene);
 	// light6.diffuse = new BABYLON.Color3(1, 1, 0.8);
@@ -368,18 +391,24 @@ var addFog = function(scene){
 	scene.fogColor = new BABYLON.Color3.Black();
 }
 
-var getAnimationGroupForObject = function(meshObject, scene){
+var getAnimationGroupsForObject = function(meshObject, scene){
 	var aGroups = scene.animationGroups;	
-	
+	const animations = [];
 	for(var i=0; i<aGroups.length; i++){//each animation group
 		group = aGroups[i];
-		
-		if(group._targetedAnimations[0].target.id == meshObject.id){
-			return group;
-		}
+		console.log('a group');
+		console.log(group)
+		console.log('target');
+		console.log(group._targetedAnimations[0].target.name)
+		//group.start();
+		group._targetedAnimations.forEach(anim => {
+			if(anim.target.name == meshObject.id){
+				animations.push(anim);
+			}
+		});
 		
 	}
-	return false;
+	return animations;
 	
 }
 
@@ -404,7 +433,7 @@ var theADD = async function(staged, stackPosition, offstageID, scene){
 		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
 			replacing.animGroup.start(false, -1, 120, 0, false);
-			console.log(replacing.animGroup);
+			// console.log(replacing.animGroup);
 			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
 				
 				resolve('resolved');
