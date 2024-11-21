@@ -495,7 +495,7 @@ var theRemove = function(stackPosition, offstageID, staged, scene){
 
 		});
 
-		removed.animGroup.start(false, 1, 0, 120, false);//trigger baked open animation 
+		removed.animGroup.start(false, -1, 0, 120, false);//trigger baked open animation 
 	
 	});
 			
