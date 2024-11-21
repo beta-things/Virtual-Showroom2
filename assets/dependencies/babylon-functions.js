@@ -402,7 +402,7 @@ var theADD = async function(staged, stackPosition, offstageID, scene, mirrorOBJ)
 
 		scene.beginDirectAnimation(replacing.part, [zSlideL], 0, 2 * frameRate, false, 2, function(){
 
-			replacing.animGroup.start(false, -1, 0, 120, false);
+			replacing.animGroup.start(false, 1, 120, 0, false);
 			replacing.animGroup.onAnimationGroupEndObservable.addOnce(function(){
 				regenerateFlatMirror(mirrorOBJ.MIRRORMESH, mirrorOBJ.mirrorPlane);
 				resolve('resolved');
